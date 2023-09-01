@@ -8,7 +8,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	fmt.Println("开始启动～")
+	fmt.Println("start server...")
 	http.HandleFunc("/hello", handler)
 	http.ListenAndServe(":8080", nil)
 }
