@@ -1,36 +1,13 @@
-const router = require('koa-router')()
+var express = require('express');
+var router = express.Router();
 
-router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello Koa 3333,new code!'
-  })
-})
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
-router.get('/test', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'test router!'
-  })
-})
+router.get('/test', function (req, res, next) {
+  res.render('index', { title: 'test data###' });
+});
 
-router.get('/string', async (ctx, next) => {
-  ctx.body = 'koa2 string'
-})
-
-router.get('/json', async (ctx, next) => {
-  ctx.body = {
-    title: 'koa2 json'
-  }
-})
-
-router.get('/articleList', async (ctx, next) => {
-  ctx.body = [
-    {
-      title: "test",
-      content: "Death investigated at Burning Man while 70,000 festival attendees remain stuck in Nevada desert after rain",
-      image: 'xxx',
-      date: "2021-10-10",
-    }
-  ]
-})
-
-module.exports = router
+module.exports = router;

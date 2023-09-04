@@ -1,30 +1,16 @@
 {
   "name": "superlion",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "node index.js",
-    "start": "node bin/www",
-    "dev": "./node_modules/.bin/nodemon bin/www",
-    "prd": "pm2 start bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
   "dependencies": {
-    "@vercel/node": "^3.0.3",
-    "axios": "^1.5.0",
-    "debug": "^4.1.1",
-    "koa": "^2.7.0",
-    "koa-bodyparser": "^4.2.1",
-    "koa-convert": "^1.2.0",
-    "koa-json": "^2.0.2",
-    "koa-logger": "^3.2.0",
-    "koa-onerror": "^4.1.0",
-    "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0",
-    "koa-views": "^6.2.0",
-    "pug": "^2.0.3"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.1"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11"
   }
 }

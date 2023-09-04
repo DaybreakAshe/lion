@@ -4,30 +4,28 @@
  * Module dependencies.
  */
 
-var app = require('..');
-var debug = require('debug')('demo:server');
+var app = require('../app');
+var debug = require('debug')('superlion:server');
 var http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3008');
-// app.set('port', port);
+var port = normalizePort(process.env.PORT || '3009');
+app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app.callback());
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
-//打印绿色的字体
-console.log('start run at http://localhost:' + port);
 server.on('error', onError);
 server.on('listening', onListening);
 
