@@ -4,7 +4,7 @@ import Header from "./Header";
 import Main from "./Main";
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-
+        position: "relative",
     }
 }))
 
