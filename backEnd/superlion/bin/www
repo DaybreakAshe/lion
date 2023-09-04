@@ -26,6 +26,8 @@ var server = http.createServer(app.callback());
  */
 
 server.listen(port);
+//打印绿色的字体
+console.log('start run at http://localhost:' + port);
 server.on('error', onError);
 server.on('listening', onListening);
 

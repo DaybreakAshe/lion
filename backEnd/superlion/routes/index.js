@@ -16,4 +16,15 @@ router.get('/json', async (ctx, next) => {
   }
 })
 
+router.get('/articleList', async (ctx, next) => {
+  ctx.body = [
+    {
+      title: "test",
+      content: "Death investigated at Burning Man while 70,000 festival attendees remain stuck in Nevada desert after rain",
+      image: 'xxx',
+      date: "2021-10-10",
+    }
+  ]
+})
+
 module.exports = router
