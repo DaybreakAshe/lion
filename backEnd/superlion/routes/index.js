@@ -6,6 +6,12 @@ router.get('/', async (ctx, next) => {
   })
 })
 
+router.get('/test', async (ctx, next) => {
+  await ctx.render('index', {
+    title: 'test router!'
+  })
+})
+
 router.get('/string', async (ctx, next) => {
   ctx.body = 'koa2 string'
 })
