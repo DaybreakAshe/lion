@@ -1,0 +1,10 @@
+{
+  "name": "superlion",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^20.5.9",
+    "koa": "^2.14.2"
+  }
+}
