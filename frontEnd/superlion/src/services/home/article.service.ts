@@ -1,4 +1,4 @@
-import { axiosApi } from "@/api/api.ts";
+import { axiosApi } from "../../api/api";
 
 export interface ArticleCardProps {
     title: string,

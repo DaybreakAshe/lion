@@ -5,7 +5,7 @@ import ArticleCard from "./ArticleCard";
 import { uuid } from "../../utils/helpers";
 import { ArticleCardProps } from "@/services/home/article.service";
 import { useState, useEffect } from "react";
-import { getArticleList } from "@/services/home/article.service";
+import { getArticleList } from "../../services/home/article.service";
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
         width: "100%",
