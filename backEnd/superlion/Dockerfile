@@ -7,7 +7,7 @@ WORKDIR /app
 # 将当前的目录的文件都拷贝到/app目录
 ADD . /app
 #构建go二进制文件
-RUN go build -o main ./go_gin1/main.go 
+RUN go build -o main ./main.go
 # 输出的端口号
 EXPOSE 8080        
 # 执行,有点像shell
