@@ -8,6 +8,9 @@ import (
 )
 
 func Cors() gin.HandlerFunc {
+
+	fmt.Println("user my cors...")
+
 	return func(context *gin.Context) {
 		method := context.Request.Method
 		origin := context.Request.Header.Get("Origin")
