@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	server := gin.New() // 创建服务
+	server := gin.Default() // 创建服务
 	server.Use(cors.Default())
 	/* 处理请求 */
 	server.GET("/hello", func(context *gin.Context) {
