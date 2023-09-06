@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	server := gin.Default() // 创建服务
+	server := gin.New() // 创建服务
+	server.Use(cors.Default())
 	/* 处理请求 */
 	server.GET("/hello", func(context *gin.Context) {
 		context.JSONP(200, gin.H{"msg": "Hello World !"})
