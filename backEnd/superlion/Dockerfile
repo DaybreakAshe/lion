@@ -1,15 +1,15 @@
 
 FROM golang:latest    
 #创建一个文件夹
-RUN mkdir /app     
+RUN mkdir /superlion
 # 移动到指定的目录
-WORKDIR /app       
+WORKDIR /superlion
 # 将当前的目录的文件都拷贝到/app目录
-ADD ./* /app
+ADD ./* /superlion
 #构建go二进制文件
-RUN rm -rf go.mod && go mod init && go build -o main ./main.go ./router.go
+RUN rm -rf go.mod && go mod init superlion && go build -o main ./main.go ./router.go
 # 输出的端口号
 EXPOSE 8080        
 # 执行,有点像shell
-CMD /app/main      
+CMD /superlion/main
  
