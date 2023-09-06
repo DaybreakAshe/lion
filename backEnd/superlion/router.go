@@ -11,4 +11,5 @@ func InitRouter(r *gin.Engine) {
 
 	apiRouter.GET("/", controller.Index)
 	apiRouter.GET("/hello", controller.Hello)
+	apiRouter.GET("/login", controller.Login)
 }
