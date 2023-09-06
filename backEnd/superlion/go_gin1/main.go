@@ -11,11 +11,13 @@ func main() {
 	server.Use(Cors())
 	/* 处理请求 */
 	server.GET("/hello", func(context *gin.Context) {
+		fmt.Println("access path:/hello")
 		context.JSONP(200, gin.H{"msg": "Hello World !"})
 	})
 
 	/* 处理请求 */
 	server.GET("/", func(context *gin.Context) {
+		fmt.Println("access path:/")
 		context.JSONP(200, gin.H{"msg": "Hello go !"})
 	})
 
