@@ -2,7 +2,7 @@ import Axios, { AxiosInstance } from 'axios';
 
 export const axiosApi = (): AxiosInstance => {
     const instance = Axios.create({
-        baseURL: 'https://superlion-backend.vercel.app/api',
+        baseURL: 'https://superlion.zeabur.app',
         headers: {
             Authorization: ''
         },
