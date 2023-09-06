@@ -1,5 +1,4 @@
 import { axiosApi } from "../../api/api";
-
 export interface ArticleCardProps {
     title: string,
     content: string,
@@ -10,7 +9,7 @@ export interface ArticleCardProps {
 export const getArticleList = async () => {
     try {
         const response = await axiosApi().get('/hello')
-        return response
+        return response.data
     } catch (error: any) {
         return error.response;
     }
