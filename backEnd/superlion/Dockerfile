@@ -1,19 +1,33 @@
 
 # syntax=docker/dockerfile:1
 
-FROM golang:1.16-alpine
+##
+## Build
+##
+FROM golang:1.18-alpine AS build
 
 WORKDIR /app
 
 COPY go.mod ./
 COPY go.sum ./
-RUN go env -w GO111MODULE=on && go mod download
+RUN go mod download
 
 COPY *.go ./
 
-RUN go build -o /lion
+ENV GO111MODULE=on
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-go-server-ping .
+
+##
+## Deploy
+##
+FROM scratch
+
+WORKDIR /
+
+COPY --from=build /docker-go-server-ping /docker-go-server-ping
 
 EXPOSE 8080
 
-CMD [ "/lion" ]
+ENTRYPOINT ["/docker-go-server-ping"]
 
