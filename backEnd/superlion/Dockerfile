@@ -12,7 +12,7 @@ COPY . ./
 
 ENV GO111MODULE=on
 
-RUN go build -o /docker-go-server-ping
+RUN go build -o /lion
 
 ##
 ## Deploy
@@ -21,9 +21,9 @@ FROM scratch
 
 WORKDIR /
 
-COPY --from=build /docker-go-server-ping /docker-go-server-ping
+COPY --from=build /lion /lion
 
 EXPOSE 8080
 
-ENTRYPOINT ["/docker-go-server-ping"]
+ENTRYPOINT ["/lion"]
 
