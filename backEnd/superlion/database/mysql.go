@@ -56,6 +56,6 @@ func Mysql() {
 	r.Run()
 }
 
-func init() {
-	panic("unimplemented")
-}
+// func init() {
+// 	panic("unimplemented")
+// }
