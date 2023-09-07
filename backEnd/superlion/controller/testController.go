@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"superlion/bean"
 	"superlion/service"
 )
@@ -29,12 +30,20 @@ func Hello(c *gin.Context) {
 */
 func Login(c *gin.Context) {
 
-	req := bean.LoginReq{
-		c.PostForm("name"),
-		c.PostForm("passwd"),
+	var reqBody = bean.LoginReq{}
+
+	if er := c.BindJSON(&reqBody); er == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": error.Error})
+
+		return
 	}
+
+	//req := bean.LoginReq{
+	//	c.PostForm("name"),
+	//	c.PostForm("passwd"),
+	//}
 	/* 处理请求 */
-	data, err := service.Login(&req)
+	data, err := service.Login(&reqBody)
 
 	if len(err) != 0 {
 		c.JSONP(400, gin.H{
