@@ -2,7 +2,8 @@ import { Box, Theme, TextField } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import logo from "../../../src/assets/images/home/logo.png"
 import { useState } from "react";
-const useStyles = makeStyles((theme: Theme) => ({
+import UserInfo from '../../components/userInfo/UserInfo'
+const useStyles = makeStyles((_theme: Theme) => ({
     content: {
         width: "100%",
         height: "65px",
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        boxSizing: "border-box",
     },
     logoBox: {
         width: "60px",
@@ -59,9 +61,8 @@ const Header = () => {
                         onChange={(e) => setSearchValue(e.target.value)}
                         className={classes.inputStyle}
                     />
-                    {/* <SearchIcon style={{marginLeft:"20px"}}/> */}
                 </Box>
-                <div></div>
+                <UserInfo/>
             </Box>
         </>
     )
