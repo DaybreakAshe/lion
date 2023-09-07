@@ -6,17 +6,17 @@
 ##
 FROM golang:1.18-alpine AS build
 
-WORKDIR /app
+WORKDIR /superlion
 
 COPY go.mod ./
 COPY go.sum ./
-RUN go mod download
+RUN go mod tidy && go mod download
 
 COPY *.go ./
 
 ENV GO111MODULE=on
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-go-server-ping .
+RUN go build -o /docker-go-server-ping .
 
 ##
 ## Deploy
