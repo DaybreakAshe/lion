@@ -25,5 +25,5 @@ COPY --from=buildimage /lion ./
 
 EXPOSE 8080
 RUN ls -l
-ENTRYPOINT ["./lion"]
+ENTRYPOINT ["/lion"]
 
