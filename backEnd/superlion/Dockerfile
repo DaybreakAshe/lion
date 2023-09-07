@@ -4,7 +4,7 @@
 ##
 ## Build
 ##
-FROM golang:1.18 AS build
+FROM golang:1.18 AS buildimage
 
 WORKDIR /superlion
 
@@ -17,13 +17,13 @@ RUN go build -o /lion
 ##
 ## Deploy
 ##
-FROM scratch
+FROM alpine
 
 WORKDIR /
 
-COPY --from=build /lion /lion
+COPY --from=buildimage /lion ./
 
 EXPOSE 8080
-
-ENTRYPOINT ["/lion"]
+RUN ls -l
+ENTRYPOINT ["./lion"]
 
