@@ -5,6 +5,7 @@ import ArticleCard from "./ArticleCard";
 import { uuid } from "../../utils/helpers";
 import { ArticleCardProps } from "@/services/home/article.service";
 import { useState, useEffect } from "react";
+import { getArticleList } from "../../services/home/article.service";
 const useStyles = makeStyles((theme: Theme) => ({
     content: {
         width: "100%",
@@ -50,8 +51,12 @@ const articleList = [
 const Main = () => {
     const classes = useStyles()
     const [list, setList] = useState<ArticleCardProps[]>([])
+    const getArticle = async () => {
+        const res = await getArticleList()
+        console.log("res", res)
+    }
     useEffect(() => {
-        setList(articleList)
+        getArticle()
     }, [])
     return (
         <>
