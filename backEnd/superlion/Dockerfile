@@ -17,13 +17,15 @@ RUN go build -o /lion
 ##
 ## Deploy
 ##
-FROM alpine
-
-WORKDIR /
-
-COPY --from=buildimage /lion ./
+#FROM alpine
+#
+#WORKDIR /
+#
+#COPY --from=buildimage /lion ./
 
 EXPOSE 8080
+
 RUN ls -l
+
 ENTRYPOINT ["/lion"]
 
