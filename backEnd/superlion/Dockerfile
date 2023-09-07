@@ -4,19 +4,15 @@
 ##
 ## Build
 ##
-FROM golang:1.18-alpine AS build
+FROM golang:1.18 AS build
 
 WORKDIR /superlion
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod tidy && go mod download
-
-COPY *.go ./
+COPY . ./
 
 ENV GO111MODULE=on
 
-RUN go build -o /docker-go-server-ping .
+RUN go build -o /docker-go-server-ping
 
 ##
 ## Deploy
