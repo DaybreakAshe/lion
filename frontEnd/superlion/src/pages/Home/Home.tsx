@@ -1,6 +1,6 @@
 import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
-import Header from "./Header";
+import Header from "../../layout/header/Header";
 import Main from "./Main";
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

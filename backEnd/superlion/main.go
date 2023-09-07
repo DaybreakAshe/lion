@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"runtime/debug"
+	mysqlservice "superlion/database"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -22,6 +24,8 @@ func main() {
 	server := gin.Default() // 创建服务
 	server.Use(cors())
 	/* 处理请求 */
+
+	mysqlservice.Mysql()
 
 	InitRouter(server)
 
