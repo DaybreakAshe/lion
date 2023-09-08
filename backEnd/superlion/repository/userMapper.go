@@ -8,6 +8,13 @@ import "superlion/model"
 type UserDao struct {
 }
 
-func (*UserDao) GetUserInfo(u *model.UserEntity) {
+/**
+通过googleId查询用户
+*/
+func (*UserDao) GetUserInfoByGId(gid string) (*model.UserEntity, string) {
 
+	if len(gid) == 0 {
+		return nil, "id不可以为空！"
+	}
+	return nil, ""
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/u2takey/go-utils/json"
 	"github.com/u2takey/go-utils/uuid"
 	"superlion/bean"
 )
@@ -10,6 +11,33 @@ func PrintHello() {
 	fmt.Println("hello !!!!!!")
 }
 
+/**
+获取google授权后信息,
+*/
+func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
+
+	// 打印json
+	jsonstr, err := json.Marshal(params)
+	if err != nil {
+		fmt.Printf("json format error:%s\n", err.Error)
+		return bean.CommonResponse{}, err.Error()
+	}
+	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
+
+	// 处理数据 todo：
+
+	rsp := bean.CommonResponse{
+		"ok",
+		"200",
+		"ok",
+	}
+
+	return rsp, ""
+}
+
+/**
+登录接口 todo：未完成，未使用
+*/
 func Login(req *bean.LoginReq) (string, string) {
 
 	fmt.Printf("login request params:name=%s,pwd=%s\n", req.Name, req.Passwd)
