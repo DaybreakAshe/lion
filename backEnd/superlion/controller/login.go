@@ -5,6 +5,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"superlion/service"
 )
 
@@ -15,12 +16,16 @@ func GetAuthParams(c *gin.Context) {
 	// 获取body参数
 	eor := c.BindJSON(&req)
 	if eor != nil {
+		c.JSONP(400, gin.H{
+			"msg": eor.Error,
+		})
 		return
 	}
 
 	// 解析：
 	data, err := service.GetGoogleAuthBody(req)
 
+	log.Panicf("receive body :%s\n", data)
 	if len(err) != 0 {
 		c.JSONP(400, gin.H{
 			"msg": err,
@@ -31,5 +36,4 @@ func GetAuthParams(c *gin.Context) {
 			"data": data,
 		})
 	}
-	return
 }

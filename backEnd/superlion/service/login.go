@@ -27,7 +27,7 @@ func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
 	// 处理数据 todo：
 
 	rsp := bean.CommonResponse{
-		"ok",
+		string(jsonstr),
 		"200",
 		"ok",
 	}
