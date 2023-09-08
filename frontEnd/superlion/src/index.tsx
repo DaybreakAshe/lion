@@ -5,13 +5,20 @@ import App from './router/App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@mui/material/styles'
 import { theme } from './theme'
+import { store, persistor } from './store/store/store';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <App />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
+      </Provider>
     </ThemeProvider>
   </React.StrictMode>
 );
