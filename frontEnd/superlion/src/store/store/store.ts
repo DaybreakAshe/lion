@@ -17,6 +17,22 @@ const initialState = {
 
 function reducer(state = initialState, action: AnyAction) {
     switch (action.type) {
+        case 'SET_USERNAME':
+            return { ...state, username: action.payload };
+        case 'DELETE_USERNAME':
+            return { ...state, username: null };
+        case 'SET_NICKNAME':
+            return { ...state, nickname: action.payload };
+        case 'DELETE_NICKNAME':
+            return { ...state, nickname: null };
+        case 'SET_AVATAR':
+            return { ...state, avatar: action.payload };
+        case 'DELETE_AVATAR':
+            return { ...state, avatar: null };
+        case 'SET_EMAIL':
+            return { ...state, email: action.payload };
+        case 'DELETE_EMAIL':
+            return { ...state, email: null };
         default:
             return state;
     }

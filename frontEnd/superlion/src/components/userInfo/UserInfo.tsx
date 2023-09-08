@@ -1,14 +1,15 @@
-/* eslint-disable no-restricted-globals */
-import { Box, Theme, TextField, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Avatar } from "@mui/material";
+import { Box, Theme, Divider, Dialog, DialogTitle, DialogContent, Button, Avatar } from "@mui/material";
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import CircularProgress from '@mui/material/CircularProgress';
 import google_ico from '../../assets/images/login/ico-google.svg'
-import { storeValue, getStoredValue } from '../../utils/storage'
+import { getStoredValue } from '../../utils/storage'
 import { useSelector } from 'react-redux'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-
+import { getUserInfo } from '../../services/login/login.service'
+import { setUsername, setNickname, setAvatar, setEmail } from '../../store/actions/actions'
+import { useDispatch } from 'react-redux';
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
         padding: "25px 10px",
@@ -126,11 +127,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const UserInfo = () => {
     const classes = useStyles()
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false)
-    const [loading, setLoading] = useState<boolean>(false)
-    const urlParams = new URLSearchParams(location.search);
-    const access_token = urlParams.get('access_token');
     const isLogin = getStoredValue('access_token')
+    const [loading, setLoading] = useState<boolean>(false)
+    /* eslint-disable no-restricted-globals */
+    let url = location.href;
     const avatar = useSelector((state: any) => state.avatar)
     const userName = useSelector((state: any) => state.username)
     const [isShow, setIsShow] = useState<boolean>(false)
@@ -138,11 +140,30 @@ const UserInfo = () => {
         setLoading(true)
         window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&response_type=token&state=3EAB37D9D5310BFE&redirect_uri=https://superlion.vercel.app&client_id=32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com`
     }
-    useEffect(() => {
-        if (access_token) {
-            storeValue('access_token', access_token)
+    const parseUrl = (url: string) => {
+        if (url.indexOf("#") > -1) {
+            url = url.split("#")[1];
         }
-    }, [access_token])
+        const arr = url.split("&");
+        const params: any = {};
+        for (let i = 0; i < arr.length; i++) {
+            const data = arr[i].split("=");
+            params[data[0]] = data[1];
+        }
+        return params;
+    }
+    const handleUserInfo = async (info: any) => {
+        const res = await getUserInfo(info)
+        console.log("login##", res)
+        //存储用户信息
+    }
+    useEffect(() => {
+        if (url && !isLogin) {
+            const res = parseUrl(url)
+            console.log("res##", res)
+            handleUserInfo(res)
+        }
+    }, [isLogin, url])
     return (
         <>
             {
