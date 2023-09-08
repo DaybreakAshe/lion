@@ -3,8 +3,11 @@
 //@create: 2023-09-07 15:48
 package repository
 
-import "go/types"
+import "superlion/model"
 
-func GetUserInfo(p *types.Map) {
+type UserDao struct {
+}
+
+func (*UserDao) GetUserInfo(u *model.UserEntity) {
 
 }
