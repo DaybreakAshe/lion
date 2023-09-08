@@ -8,7 +8,7 @@ export interface ArticleCardProps {
 
 export const getArticleList = async () => {
     try {
-        const response = await axiosApi().get('/hello')
+        const response = await axiosApi().get('/')
         return response.data
     } catch (error: any) {
         return error.response;
