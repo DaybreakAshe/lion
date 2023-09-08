@@ -63,7 +63,7 @@ const UserInfo = () => {
     const [loading,setLoading] = useState<boolean>(false)
     const youtubeLogin = async () => {
         setLoading(true)
-         window.location.href =`https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&response_type=token&state=3EAB37D9D5310BFE&redirect_uri=https://www.idzd.top/oauth&client_id=32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com`
+        window.location.href =`https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&response_type=token&state=3EAB37D9D5310BFE&redirect_uri=https://superlion.vercel.app&client_id=32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com`
     }
     return (
         <>
