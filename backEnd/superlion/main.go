@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"runtime/debug"
-	mysqlservice "superlion/database"
-
 	"github.com/gin-gonic/gin"
+	"runtime/debug"
 )
 
 func main() {
@@ -25,7 +23,7 @@ func main() {
 	server.Use(cors())
 	/* 处理请求 */
 
-	mysqlservice.Mysql()
+	// mysqlservice.Mysql()
 
 	InitRouter(server)
 
