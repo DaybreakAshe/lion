@@ -27,10 +27,9 @@ func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
 	}
 	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
 
-	var rsp bean.CommonResponse
-
 	var errMsg string
-
+	var response = bean.CommonResponse{}
+	rsp := &response
 	// 请求谷歌api，获取用户信息
 	url := "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
@@ -40,11 +39,9 @@ func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
 
 	// fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
 	if eor != nil {
-		rsp.Data = ""
-		rsp.Code = "450"
-		rsp.Msg = "请求google出错了"
-		errMsg = rsp.Msg
+
 		fmt.Printf("get google info error:%s\n", eor)
+		return bean.CommonResponse{Code: "450", Msg: "请求google出错了"}, ""
 	} else {
 		// 200 => 请求成功
 		if http.StatusOK == resp.StatusCode {
@@ -77,7 +74,7 @@ func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
 		}
 	}
 
-	return rsp, errMsg
+	return response, errMsg
 }
 
 /**
