@@ -26,7 +26,7 @@ func GetAuthParams(c *gin.Context) {
 	// 解析：
 	data, err := service.GetGoogleAuthBody(req)
 
-	jstr, eor := json.Marshal(data)
+	jstr, eor := json.Marshal(*data)
 	fmt.Printf("login func :%s\n", string(jstr))
 	//	log.Panicf("receive body :%s\n", data)
 	if len(err) != 0 {
@@ -36,8 +36,8 @@ func GetAuthParams(c *gin.Context) {
 	} else {
 		c.JSONP(200, gin.H{
 			"msg":  "",
-			"data": data,
+			"data": *data,
 		})
 	}
-	fmt.Printf("receive body :%s\n\n", data)
+	fmt.Printf("receive body :%s\n\n", *data)
 }

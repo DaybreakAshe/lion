@@ -17,13 +17,13 @@ func PrintHello() {
 /**
 获取google授权后信息,
 */
-func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
+func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 	// 打印json
 	jsonstr, err := json.Marshal(params)
 	if err != nil {
 		fmt.Printf("json format error:%s\n", err.Error)
-		return bean.CommonResponse{}, err.Error()
+		return &bean.CommonResponse{}, err.Error()
 	}
 	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
 
@@ -41,7 +41,7 @@ func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
 	if eor != nil {
 
 		fmt.Printf("get google info error:%s\n", eor)
-		return bean.CommonResponse{Code: "450", Msg: "请求google出错了"}, ""
+		return &bean.CommonResponse{Code: "450", Msg: "请求google出错了"}, ""
 	} else {
 		// 200 => 请求成功
 		if http.StatusOK == resp.StatusCode {
@@ -74,7 +74,7 @@ func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
 		}
 	}
 
-	return response, errMsg
+	return rsp, errMsg
 }
 
 /**
