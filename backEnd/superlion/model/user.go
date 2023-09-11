@@ -5,7 +5,16 @@ package model
 
 // 数据库映射实体结构体
 type UserEntity struct {
-	UserName  string
+	GoName    string
 	LoginName string
-	LoginPwd  string
+	Avatar    string
+	Status    string
+	// 主键 todo
+	GoId             string
+	GoEmail          string
+	GoToken          string
+	GoVerified_email bool
+	UserId           string
+	GoPicture        string
+	GoLocale         string
 }

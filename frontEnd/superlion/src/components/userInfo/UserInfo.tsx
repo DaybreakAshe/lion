@@ -1,15 +1,14 @@
 import { Box, Theme, Divider, Dialog, DialogTitle, DialogContent, Button, Avatar } from "@mui/material";
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { makeStyles } from '@mui/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import CircularProgress from '@mui/material/CircularProgress';
 import google_ico from '../../assets/images/login/ico-google.svg'
-import { getStoredValue } from '../../utils/storage'
-import { useSelector } from 'react-redux'
+import { getStoredValue, storeValue } from '../../utils/storage'
+import { useSelector, useDispatch } from 'react-redux'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import { getUserInfo } from '../../services/login/login.service'
 import { setUsername, setNickname, setAvatar, setEmail } from '../../store/actions/actions'
-import { useDispatch } from 'react-redux';
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
         padding: "25px 10px",
@@ -136,9 +135,12 @@ const UserInfo = () => {
     const avatar = useSelector((state: any) => state.avatar)
     const userName = useSelector((state: any) => state.username)
     const [isShow, setIsShow] = useState<boolean>(false)
+    const pathSegments = window.location.origin
+    //获取地址栏url
+    const redirectUri = pathSegments === 'http://localhost:3000' ? 'http://localhost:3000' : 'https://superlion.vercel.app'
     const youtubeLogin = async () => {
         setLoading(true)
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&response_type=token&state=3EAB37D9D5310BFE&redirect_uri=https://superlion.vercel.app&client_id=32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com`
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&response_type=token&state=3EAB37D9D5310BFE&redirect_uri=${redirectUri}&client_id=32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com`
     }
     const parseUrl = (url: string) => {
         if (url.indexOf("#") > -1) {
@@ -153,15 +155,22 @@ const UserInfo = () => {
         return params;
     }
     const handleUserInfo = async (info: any) => {
+        console.log("传的参数##", info)
         const res = await getUserInfo(info)
-        console.log("login##", res)
-        //存储用户信息
+        console.log("结果##", res)
+        if (res) {
+            storeValue('access_token', res?.access_token || '')
+        }
     }
     useEffect(() => {
         if (url && !isLogin) {
             const res = parseUrl(url)
-            console.log("res##", res)
-            handleUserInfo(res)
+            if (res.access_token) {
+                const param = {
+                    accessToken: res.access_token
+                }
+                handleUserInfo(param)
+            }
         }
     }, [isLogin, url])
     return (

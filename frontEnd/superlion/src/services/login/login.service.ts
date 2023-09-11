@@ -1,12 +1,5 @@
-
-
-
-
 import { axiosApi } from "../../api/api";
 
-interface tokenProps {
-
-}
 
 export const getUserInfo = async (params:any) => {
     try {

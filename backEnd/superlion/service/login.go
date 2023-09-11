@@ -2,8 +2,11 @@ package service
 
 import (
 	"fmt"
+	"github.com/mitchellh/mapstructure"
 	"github.com/u2takey/go-utils/json"
 	"github.com/u2takey/go-utils/uuid"
+	"io/ioutil"
+	"net/http"
 	"superlion/bean"
 )
 
@@ -14,25 +17,71 @@ func PrintHello() {
 /**
 获取google授权后信息,
 */
-func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
+func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 	// 打印json
 	jsonstr, err := json.Marshal(params)
 	if err != nil {
 		fmt.Printf("json format error:%s\n", err.Error)
-		return bean.CommonResponse{}, err.Error()
+		return &bean.CommonResponse{}, err.Error()
 	}
 	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
 
-	// 处理数据 todo：
+	var errMsg string
 
-	rsp := bean.CommonResponse{
-		"ok",
-		"200",
-		"ok",
+	rsp := &bean.CommonResponse{}
+	// 请求谷歌api，获取用户信息
+	url := "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
+
+	url = url + params.AccessToken
+
+	resp, eor := http.Get(url)
+
+	// fmt.Printf("get google url:[%s] rsp code:%d\n", url, resp.StatusCode)
+	// fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
+	if eor != nil {
+
+		rsp.Code = "604"
+		rsp.Msg = "请求google出错了"
+		fmt.Printf("get google info error:%s\n", eor)
+		fmt.Printf("get google url:%s, rsp code:%d\n", url, resp.StatusCode)
+		return rsp, ""
+	} else {
+		// 200 => 请求成功
+		if http.StatusOK == resp.StatusCode {
+
+			result, err := ParseResponse(resp)
+			if err != nil {
+				rsp.Code = "601"
+				rsp.Msg = "json转换出错"
+				fmt.Printf("json prase error :%s\n", err.Error())
+			}
+
+			// 定义返回结构体
+			goUserInfo := &GoUserInfo{}
+			perr := mapstructure.Decode(&result, goUserInfo)
+
+			if perr != nil {
+				rsp.Code = "601"
+				rsp.Msg = "json格式化出错"
+				fmt.Printf("json prase error :%s\n", perr.Error())
+			} else {
+				jsonData, err := json.Marshal(goUserInfo)
+				if err != nil {
+					rsp.Code = "601"
+					rsp.Msg = "json格式化出错!"
+					fmt.Printf("json format error:%s\n", err.Error)
+				} else {
+					fmt.Printf("get google body info :%s\n", jsonData)
+					rsp.Code = "200"
+					rsp.Data = *goUserInfo
+				}
+
+			}
+		}
 	}
-
-	return rsp, ""
+	fmt.Printf("ready to return :%s\n", *rsp)
+	return rsp, errMsg
 }
 
 /**
@@ -58,11 +107,22 @@ func Login(req *bean.LoginReq) (string, string) {
 	return token, ""
 }
 
+// ParseResponse 响应体转map
+func ParseResponse(response *http.Response) (map[string]interface{}, error) {
+	var result map[string]interface{}
+	body, err := ioutil.ReadAll(response.Body)
+	if err == nil {
+		err = json.Unmarshal(body, &result)
+	}
+
+	return result, err
+}
+
 /**
 登录信息结构体：（google返回的参数json）：
 	示例数据：
 	"state": "3EAB37D9D5310BFE",
-	"access_token": "ya29.a0AfB_byCtVB2voZknHPiip_S8SBjWqVGx_Wf3uHYizmJmNNubIwwrDgK_juTmvz5U86lV17W54IIPjgXZuHgmUUKGe8sKa-ZurtNS0wo5RiPKRQaCgYKAbASARESFQHsvYlsoOkFLgS-kaFRpSTvA18sCw0173",
+	"access_token": "ya29.a0AfB_byCtVB2voZknHPiip_S8SBjWqVGx_Wf3uHYizmJm
 	"token_type": "Bearer",
 	"expires_in": "3599",
 	"scope": "email https://www.googleapis.com/auth/userinfo.email openid",
@@ -71,10 +131,33 @@ func Login(req *bean.LoginReq) (string, string) {
 */
 type LoginParmas struct {
 	State       string `json:"state"`
-	AccessToken string `json:"access_token"`
-	TokenType   string `json:"token_type"`
-	ExpiresIn   string `json:"expires_in"`
+	AccessToken string `json:"accessToken"`
+	TokenType   string `json:"tokenType"`
+	ExpiresIn   string `json:"expiresIn"`
 	Scope       string `json:"scope"`
-	Authuser    string `json:"authuser"`
+	AuthUser    string `json:"authuser"`
 	Prompt      string `json:"prompt"`
+}
+
+/**
+	谷歌api返回用户信息
+url = https://www.googleapis.com/oauth2/v2/userinfo?access_token=ya29.a0AfB_byCk_X
+    "id": "106256997442594399678",
+    "email": "dravenxue@gmail.com",
+    "verified_email": true,
+    "name": "Draven XUE",
+    "given_name": "Draven",
+    "family_name": "XUE",
+    "picture": "https://lh3.googleusercontent.com/a/ACg8ocKRSkY1TrhbRJEos2-LBYb6fzHAZa7rcR6vWjZZfizxcA=s96-c",
+    "locale": "zh-CN"
+*/
+type GoUserInfo struct {
+	Id            string `json:"id"`
+	Email         string `json:"email"`
+	VerifiedEmail bool   `json:"verifiedEmail"`
+	Name          string `json:"name"`
+	GivenName     string `json:"givenName"`
+	FamilyName    string `json:"familyName"`
+	Picture       string `json:"picture"`
+	Locale        string `json:"locale"`
 }
