@@ -37,6 +37,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 	resp, eor := http.Get(url)
 
+	fmt.Printf("get google url rsp code:%d\n", resp.StatusCode)
 	// fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
 	if eor != nil {
 
