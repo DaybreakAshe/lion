@@ -40,7 +40,10 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 	// fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
 	if eor != nil {
 
+		rsp.Data = "fail"
+
 		fmt.Printf("get google info error:%s\n", eor)
+		fmt.Printf("get google rsp:%s\n", *rsp)
 		return &bean.CommonResponse{Code: "450", Msg: "请求google出错了"}, ""
 	} else {
 		// 200 => 请求成功
@@ -73,7 +76,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 			}
 		}
 	}
-
+	fmt.Printf("ready to return :%s\n", *rsp)
 	return rsp, errMsg
 }
 
