@@ -41,7 +41,7 @@ func cors() gin.HandlerFunc {
 		// c.Writer.Header().Set("Access-Control-Allow-Origin", "https://superlion.vercel.app/")
 		// 接收所有
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Expose-Headers", "Access-Control-Allow-Origin")
+		c.Writer.Header().Set("Access-Control-Expose-Headers", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
 		if c.Request.Method == "OPTIONS" {
