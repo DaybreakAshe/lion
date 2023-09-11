@@ -28,8 +28,8 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
 
 	var errMsg string
-	var response = bean.CommonResponse{}
-	rsp := &response
+
+	rsp := &bean.CommonResponse{}
 	// 请求谷歌api，获取用户信息
 	url := "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
@@ -40,11 +40,11 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 	// fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
 	if eor != nil {
 
-		rsp.Data = "fail"
-		rsp.Code = "601"
+		rsp.Code = "604"
 		rsp.Msg = "请求google出错了"
 		fmt.Printf("get google info error:%s\n", eor)
 		fmt.Printf("get google rsp:%s\n", *rsp)
+
 		return rsp, ""
 	} else {
 		// 200 => 请求成功
@@ -58,22 +58,22 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 			}
 
 			// 定义返回结构体
-			var goUserInfo GoUserInfo
-			perr := mapstructure.Decode(result, &goUserInfo)
+			goUserInfo := &GoUserInfo{}
+			perr := mapstructure.Decode(result, *goUserInfo)
 
 			if perr != nil {
 				rsp.Code = "601"
 				rsp.Msg = "json格式化出错"
 				fmt.Printf("json prase error :%s\n", perr.Error())
 			} else {
-				jsonData, err := json.Marshal(goUserInfo)
+				jsonData, err := json.Marshal(*goUserInfo)
 				if err != nil {
 					rsp.Code = "601"
 					rsp.Msg = "json格式化出错!"
 					fmt.Printf("json format error:%s\n", err.Error)
 				}
 				fmt.Printf("get google body info :%s\n", jsonData)
-				rsp.Data = goUserInfo
+				rsp.Data = *goUserInfo
 			}
 		}
 	}
@@ -132,7 +132,7 @@ type LoginParmas struct {
 	TokenType   string `json:"tokenType"`
 	ExpiresIn   string `json:"expiresIn"`
 	Scope       string `json:"scope"`
-	Authuser    string `json:"authuser"`
+	AuthUser    string `json:"authuser"`
 	Prompt      string `json:"prompt"`
 }
 
