@@ -37,15 +37,14 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 	resp, eor := http.Get(url)
 
-	fmt.Printf("get google url rsp code:%d\n", resp.StatusCode)
+	// fmt.Printf("get google url:[%s] rsp code:%d\n", url, resp.StatusCode)
 	// fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
 	if eor != nil {
 
 		rsp.Code = "604"
 		rsp.Msg = "请求google出错了"
 		fmt.Printf("get google info error:%s\n", eor)
-		fmt.Printf("get google rsp:%s\n", *rsp)
-
+		fmt.Printf("get google url:%s, rsp code:%d\n", url, resp.StatusCode)
 		return rsp, ""
 	} else {
 		// 200 => 请求成功
@@ -60,14 +59,14 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 			// 定义返回结构体
 			goUserInfo := &GoUserInfo{}
-			perr := mapstructure.Decode(result, *goUserInfo)
+			perr := mapstructure.Decode(&result, goUserInfo)
 
 			if perr != nil {
 				rsp.Code = "601"
 				rsp.Msg = "json格式化出错"
 				fmt.Printf("json prase error :%s\n", perr.Error())
 			} else {
-				jsonData, err := json.Marshal(*goUserInfo)
+				jsonData, err := json.Marshal(goUserInfo)
 				if err != nil {
 					rsp.Code = "601"
 					rsp.Msg = "json格式化出错!"
