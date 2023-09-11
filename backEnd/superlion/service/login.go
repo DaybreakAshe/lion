@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"superlion/bean"
-	"superlion/util"
 )
 
 func PrintHello() {
@@ -39,12 +38,12 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 	resp, eor := http.Get(url)
 
-	util.PrintLog("get google response info" + resp.Body.Close().Error())
+	fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
 	if eor != nil {
 		rsp.Data = ""
 		rsp.Code = "450"
 		rsp.Msg = "请求google出错了"
-		util.PrintError(err.Error())
+		fmt.Printf("get google info error:%s\n", err.Error())
 	} else {
 		// 200 => 请求成功
 		if http.StatusOK == resp.StatusCode {

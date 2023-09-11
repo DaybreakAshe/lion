@@ -5,10 +5,10 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"superlion/service"
-	"superlion/util"
 )
 
 func GetAuthParams(c *gin.Context) {
@@ -27,7 +27,7 @@ func GetAuthParams(c *gin.Context) {
 	data, err := service.GetGoogleAuthBody(req)
 
 	jstr, eor := json.Marshal(*data)
-	util.PrintLog("login func :" + string(jstr))
+	fmt.Printf("login func :%s\n", string(jstr))
 	//	log.Panicf("receive body :%s\n", data)
 	if len(err) != 0 {
 		c.JSONP(400, gin.H{
