@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"superlion/service"
 )
 
@@ -40,5 +39,5 @@ func GetAuthParams(c *gin.Context) {
 			"data": *data,
 		})
 	}
-	log.Panicf("receive body :%s\n", data)
+	fmt.Printf("receive body :%s\n\n", *data)
 }

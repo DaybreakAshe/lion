@@ -27,7 +27,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 	}
 	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
 
-	rsp := bean.CommonResponse{
+	rsp := &bean.CommonResponse{
 		Data: string(jsonstr),
 		Code: "200",
 		Msg:  "ok",
@@ -81,7 +81,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 		}
 	}
 
-	return &rsp, errMsg
+	return rsp, errMsg
 }
 
 /**
