@@ -6,9 +6,9 @@ type LoginReq struct {
 	Passwd string
 }
 
-// 登录请求bean
+// CommonResponse 登录请求bean
 type CommonResponse struct {
-	Data string
-	Code string
-	Msg  string
+	Data interface{} `json:"data"`
+	Code string      `json:"code"`
+	Msg  string      `json:"msg"`
 }

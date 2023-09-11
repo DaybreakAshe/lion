@@ -8,6 +8,10 @@ import "superlion/model"
 type UserDao struct {
 }
 
+func (UserDao) TableName() string {
+	return "lion_user"
+}
+
 /**
 通过googleId查询用户
 */

@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/mitchellh/mapstructure"
 	"github.com/u2takey/go-utils/json"
 	"github.com/u2takey/go-utils/uuid"
 	"io/ioutil"
@@ -31,6 +32,9 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 		Code: "200",
 		Msg:  "ok",
 	}
+
+	var errMsg string
+
 	// 请求谷歌api，获取用户信息
 	url := "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
@@ -43,6 +47,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 		rsp.Data = ""
 		rsp.Code = "450"
 		rsp.Msg = "请求google出错了"
+		errMsg = rsp.Msg
 		fmt.Printf("get google info error:%s\n", err.Error())
 	} else {
 		// 200 => 请求成功
@@ -50,20 +55,32 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 			result, err := ParseResponse(resp)
 			if err != nil {
+				rsp.Code = "601"
+				rsp.Msg = "json转换出错"
 				fmt.Printf("json prase error :%s\n", err.Error())
 			}
 
-			jsonStr, perr := json.Marshal(result)
+			var goUserInfo GoUserInfo
+			perr := mapstructure.Decode(result, &goUserInfo)
 
 			if perr != nil {
+				rsp.Code = "601"
+				rsp.Msg = "json格式化出错"
 				fmt.Printf("json prase error :%s\n", perr.Error())
 			} else {
-				fmt.Printf("get google body info :%s\n", jsonStr)
+				jsonData, err := json.Marshal(params)
+				if err != nil {
+					rsp.Code = "601"
+					rsp.Msg = "json格式化出错!"
+					fmt.Printf("json format error:%s\n", err.Error)
+				}
+				fmt.Printf("get google body info :%s\n", jsonData)
+				rsp.Data = goUserInfo
 			}
 		}
 	}
 
-	return &rsp, ""
+	return &rsp, errMsg
 }
 
 /**
@@ -113,9 +130,9 @@ func ParseResponse(response *http.Response) (map[string]interface{}, error) {
 */
 type LoginParmas struct {
 	State       string `json:"state"`
-	AccessToken string `json:"access_token"`
-	TokenType   string `json:"token_type"`
-	ExpiresIn   string `json:"expires_in"`
+	AccessToken string `json:"accessToken"`
+	TokenType   string `json:"tokenType"`
+	ExpiresIn   string `json:"expiresIn"`
 	Scope       string `json:"scope"`
 	Authuser    string `json:"authuser"`
 	Prompt      string `json:"prompt"`
@@ -136,10 +153,10 @@ url = https://www.googleapis.com/oauth2/v2/userinfo?access_token=ya29.a0AfB_byCk
 type GoUserInfo struct {
 	Id            string `json:"id"`
 	Email         string `json:"email"`
-	VerifiedEmail bool   `json:"verified_email"`
+	VerifiedEmail bool   `json:"verifiedEmail"`
 	Name          string `json:"name"`
-	GivenName     string `json:"given_name"`
-	FamilyName    string `json:"family_name"`
+	GivenName     string `json:"givenName"`
+	FamilyName    string `json:"familyName"`
 	Picture       string `json:"picture"`
 	Locale        string `json:"locale"`
 }

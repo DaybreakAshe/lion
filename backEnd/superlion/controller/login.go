@@ -11,6 +11,7 @@ import (
 	"superlion/service"
 )
 
+// GetAuthParams 获取谷歌用户信息
 func GetAuthParams(c *gin.Context) {
 
 	req := service.LoginParmas{}
