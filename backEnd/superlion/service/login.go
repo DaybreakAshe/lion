@@ -60,6 +60,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 				fmt.Printf("json prase error :%s\n", err.Error())
 			}
 
+			// 定义返回结构体
 			var goUserInfo GoUserInfo
 			perr := mapstructure.Decode(result, &goUserInfo)
 
