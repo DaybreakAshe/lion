@@ -69,7 +69,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 				rsp.Msg = "json格式化出错"
 				fmt.Printf("json prase error :%s\n", perr.Error())
 			} else {
-				jsonData, err := json.Marshal(params)
+				jsonData, err := json.Marshal(goUserInfo)
 				if err != nil {
 					rsp.Code = "601"
 					rsp.Msg = "json格式化出错!"
