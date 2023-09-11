@@ -4,9 +4,11 @@
 package controller
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"log"
 	"superlion/service"
+	"superlion/util"
 )
 
 func GetAuthParams(c *gin.Context) {
@@ -19,13 +21,14 @@ func GetAuthParams(c *gin.Context) {
 		c.JSONP(400, gin.H{
 			"msg": eor.Error,
 		})
-		return
 	}
 
 	// 解析：
 	data, err := service.GetGoogleAuthBody(req)
 
-	log.Panicf("receive body :%s\n", data)
+	jstr, eor := json.Marshal(*data)
+	util.PrintLog("login func :" + string(jstr))
+	//	log.Panicf("receive body :%s\n", data)
 	if len(err) != 0 {
 		c.JSONP(400, gin.H{
 			"msg": err,
@@ -36,4 +39,5 @@ func GetAuthParams(c *gin.Context) {
 			"data": data,
 		})
 	}
+	log.Panicf("receive body :%s\n", data)
 }
