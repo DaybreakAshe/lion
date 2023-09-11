@@ -17,21 +17,17 @@ func PrintHello() {
 /**
 获取google授权后信息,
 */
-func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
+func GetGoogleAuthBody(params LoginParmas) (bean.CommonResponse, string) {
 
 	// 打印json
 	jsonstr, err := json.Marshal(params)
 	if err != nil {
 		fmt.Printf("json format error:%s\n", err.Error)
-		return &bean.CommonResponse{}, err.Error()
+		return bean.CommonResponse{}, err.Error()
 	}
 	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
 
-	rsp := &bean.CommonResponse{
-		Data: string(jsonstr),
-		Code: "200",
-		Msg:  "ok",
-	}
+	var rsp bean.CommonResponse
 
 	var errMsg string
 
