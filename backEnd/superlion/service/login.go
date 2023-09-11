@@ -48,7 +48,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 		rsp.Code = "450"
 		rsp.Msg = "请求google出错了"
 		errMsg = rsp.Msg
-		fmt.Printf("get google info error:%s\n", err.Error())
+		fmt.Printf("get google info error:%s\n", eor)
 	} else {
 		// 200 => 请求成功
 		if http.StatusOK == resp.StatusCode {
