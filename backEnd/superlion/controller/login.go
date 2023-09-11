@@ -36,7 +36,7 @@ func GetAuthParams(c *gin.Context) {
 	} else {
 		c.JSONP(200, gin.H{
 			"msg":  "",
-			"data": data,
+			"data": *data,
 		})
 	}
 	log.Panicf("receive body :%s\n", data)

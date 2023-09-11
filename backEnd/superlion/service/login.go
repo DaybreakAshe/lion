@@ -28,9 +28,9 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 	fmt.Printf("recevice auth body :%s\n", string(jsonstr))
 
 	rsp := bean.CommonResponse{
-		string(jsonstr),
-		"200",
-		"ok",
+		Data: string(jsonstr),
+		Code: "200",
+		Msg:  "ok",
 	}
 	// 请求谷歌api，获取用户信息
 	url := "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
