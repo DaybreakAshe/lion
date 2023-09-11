@@ -71,9 +71,12 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 					rsp.Code = "601"
 					rsp.Msg = "json格式化出错!"
 					fmt.Printf("json format error:%s\n", err.Error)
+				} else {
+					fmt.Printf("get google body info :%s\n", jsonData)
+					rsp.Code = "200"
+					rsp.Data = *goUserInfo
 				}
-				fmt.Printf("get google body info :%s\n", jsonData)
-				rsp.Data = *goUserInfo
+
 			}
 		}
 	}
