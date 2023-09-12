@@ -65,3 +65,27 @@ func GetUserInfoByGId(c *gin.Context) {
 	}
 
 }
+
+/**
+用户更新头像或昵称
+*/
+func UpdateUserInfo(c *gin.Context) {
+
+	//luser, _ := c.Get("lUser")
+	//req := UpdateUserInfoBean{}
+	//eor := c.BindJSON(&req)
+	//if eor != nil {
+	//	c.JSONP(400, gin.H{
+	//		"msg": eor.Error,
+	//	})
+	//}
+	//data,err := service
+}
+
+/**
+修改信息请求bean
+*/
+type UpdateUserInfoBean struct {
+	nickName string
+	avatar   string
+}

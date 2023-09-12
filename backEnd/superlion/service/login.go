@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"superlion/bean"
 	"superlion/config"
+	"superlion/config/webConfig"
 	"superlion/repository"
 	"time"
 )
@@ -124,10 +125,10 @@ func SaveTokenToCache(user *GoUserInfo) {
 	redisP := config.GetRedisHelper()
 
 	// 缓存3天
-	name, err := redisP.Set(ctx, user.LionToken, user, 24*3*time.Hour).Result()
+	name, err := redisP.Set(ctx, webConfig.RedisPre+user.LionToken, user, 24*3*time.Hour).Result()
 	if err != nil {
 		log.Fatal(err)
-		log.Panicf("缓存用户失败", err)
+		log.Panicf("缓存用户失败:%s\n", err.Error())
 		return
 	}
 	log.Printf("cache user to redis over,%s\n", name)
