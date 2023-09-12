@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"superlion/bean"
 	"superlion/config"
-	"superlion/model"
 	"superlion/repository"
 	"time"
 )
@@ -133,15 +132,15 @@ func SaveTokenToCache(user *GoUserInfo) {
 
 func SaveUserInfoToDB(user *GoUserInfo) (int, string) {
 
-	userEntity := &model.UserEntity{
-		GoId:             user.Id,
-		GoEmail:          user.Email,
-		GoLocale:         user.Locale,
-		GoName:           user.Name,
-		GoPicture:        user.Picture,
-		GoToken:          user.GoToken,
-		GoVerified_email: user.VerifiedEmail,
-		Status:           "00",
+	userEntity := &repository.UserEntity{
+		GoId:            user.Id,
+		GoEmail:         user.Email,
+		GoLocale:        user.Locale,
+		GoName:          user.Name,
+		GoPicture:       user.Picture,
+		GoToken:         user.GoToken,
+		GoVerifiedEmail: user.VerifiedEmail,
+		Status:          "00",
 	}
 
 	rows, eor := repository.NewUserDaoInstance().SaveUerInfoToDB(userEntity)

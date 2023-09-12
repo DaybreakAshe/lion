@@ -6,7 +6,7 @@ package model
 import "time"
 
 // 数据库映射实体结构体
-type UserEntity struct {
+type UserEntityb struct {
 	GoName    string `json:"GoName" gorm:"primaryKey"`
 	LoginName string
 	Avatar    string
@@ -20,4 +20,8 @@ type UserEntity struct {
 	GoPicture        string
 	GoLocale         string
 	CreateTime       time.Time
+}
+
+func (UserEntityb) TableName() string {
+	return "lion_user"
 }
