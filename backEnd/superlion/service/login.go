@@ -1,13 +1,24 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"github.com/mitchellh/mapstructure"
 	"github.com/u2takey/go-utils/json"
 	"github.com/u2takey/go-utils/uuid"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"superlion/bean"
+	"superlion/config"
+	"superlion/model"
+	"superlion/repository"
+	"time"
+)
+
+var (
+	ctx    = context.Background()
+	redisP = config.GetRedisHelper()
 )
 
 func PrintHello() {
@@ -59,6 +70,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 			// 定义返回结构体
 			goUserInfo := &GoUserInfo{}
+			// map转结构体
 			perr := mapstructure.Decode(&result, goUserInfo)
 
 			if perr != nil {
@@ -67,21 +79,76 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 				fmt.Printf("json prase error :%s\n", perr.Error())
 			} else {
 				jsonData, err := json.Marshal(goUserInfo)
+				goUserInfo.GoToken = params.AccessToken
 				if err != nil {
 					rsp.Code = "601"
 					rsp.Msg = "json格式化出错!"
 					fmt.Printf("json format error:%s\n", err.Error)
 				} else {
 					fmt.Printf("get google body info :%s\n", jsonData)
+					// 判断缓存是否存在：
+					if len(goUserInfo.LionToken) == 0 {
+						// 未带token登录，认为第一次登录？
+						ltoken := uuid.NewUUID()
+						goUserInfo.LionToken = ltoken
+						SaveTokenToCache(goUserInfo)
+					}
 					rsp.Code = "200"
 					rsp.Data = *goUserInfo
+				}
+
+				// 异步插入数据库 todo
+				log.Println("sync request over,start save info to DB")
+				// 判断数据是否已存在
+				user, _ := repository.NewUserDaoInstance().GetUserInfoByGId(goUserInfo.Id)
+
+				// 不存在则插入
+				if user == nil {
+					SaveUserInfoToDB(goUserInfo)
 				}
 
 			}
 		}
 	}
 	fmt.Printf("ready to return :%s\n", *rsp)
+
 	return rsp, errMsg
+}
+
+/**
+保存登录信息到redis，设置3天过期 todo
+*/
+func SaveTokenToCache(user *GoUserInfo) {
+
+	// 缓存3天
+	name, err := redisP.Set(ctx, user.LionToken, user, 24*3*time.Hour).Result()
+	if err != nil {
+		log.Fatal(err)
+		log.Panicf("缓存用户失败", err)
+		return
+	}
+	log.Printf("cache user to redis over,%s\n", name)
+}
+
+func SaveUserInfoToDB(user *GoUserInfo) (int, string) {
+
+	userEntity := &model.UserEntity{
+		GoId:             user.Id,
+		GoEmail:          user.Email,
+		GoLocale:         user.Locale,
+		GoName:           user.Name,
+		GoPicture:        user.Picture,
+		GoToken:          user.GoToken,
+		GoVerified_email: user.VerifiedEmail,
+		Status:           "00",
+	}
+
+	rows, eor := repository.NewUserDaoInstance().SaveUerInfoToDB(userEntity)
+	if len(eor) != 0 {
+		return 0, eor
+	}
+
+	return rows, ""
 }
 
 /**
@@ -116,6 +183,11 @@ func ParseResponse(response *http.Response) (map[string]interface{}, error) {
 	}
 
 	return result, err
+}
+
+// 实现序列化？,保存redis必须实现
+func (u *GoUserInfo) MarshalBinary() ([]byte, error) {
+	return json.Marshal(u)
 }
 
 /**
@@ -160,4 +232,7 @@ type GoUserInfo struct {
 	FamilyName    string `json:"familyName"`
 	Picture       string `json:"picture"`
 	Locale        string `json:"locale"`
+	GoToken       string `json:"goToken"`
+	// 系统token
+	LionToken string `json:"lionToken"`
 }

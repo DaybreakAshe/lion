@@ -1,11 +1,17 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"runtime/debug"
+	"superlion/config"
+)
+
+var (
+	ctx = context.Background()
 )
 
 func main() {
@@ -19,6 +25,11 @@ func main() {
 	//}
 
 	// 2、连接redis:
+	rdb := config.NewRedisHelper()
+	if _, err := rdb.Ping(ctx).Result(); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
 
 	// 、启动服务端
 	server := gin.Default() // 创建服务

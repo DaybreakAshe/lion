@@ -39,5 +39,5 @@ func GetAuthParams(c *gin.Context) {
 			"data": *data,
 		})
 	}
-	fmt.Printf("receive body :%s\n\n", *data)
+	fmt.Printf("receive body :%s\n", *data)
 }

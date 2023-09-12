@@ -3,13 +3,31 @@
 //@create: 2023-09-07 15:48
 package repository
 
-import "superlion/model"
+import (
+	"log"
+	"superlion/model"
+	"sync"
+)
 
 type UserDao struct {
 }
 
 func (UserDao) TableName() string {
 	return "lion_user"
+}
+
+var userDao *UserDao
+
+/**在 Do 方法被调用后，该函数将被执行，而且只会执行一次，即使在多个协程同时调用的情况下也是如此*/
+var userOnce sync.Once
+
+// NewUserDaoInstance 单例构建Dao
+func NewUserDaoInstance() *UserDao {
+	userOnce.Do(
+		func() {
+			userDao = &UserDao{}
+		})
+	return userDao
 }
 
 /**
@@ -20,5 +38,31 @@ func (*UserDao) GetUserInfoByGId(gid string) (*model.UserEntity, string) {
 	if len(gid) == 0 {
 		return nil, "id不可以为空！"
 	}
-	return nil, ""
+
+	user := &model.UserEntity{}
+
+	err := db.First(user).Error
+
+	if err != nil {
+		return nil, "query db error。"
+	}
+	return user, ""
+}
+
+/**
+保存用户信息
+*/
+func (*UserDao) SaveUerInfoToDB(user *model.UserEntity) (int, string) {
+
+	if len(user.GoId) == 0 {
+		return 0, "gid不可以为空！"
+	}
+
+	// 插入数据
+	err := db.Create(user).Error
+	if err != nil {
+		log.Panicf("save user info failed: %s\n", err)
+		return 0, err.Error()
+	}
+	return 1, ""
 }
