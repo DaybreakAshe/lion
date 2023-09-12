@@ -1,6 +1,6 @@
 
 //存储
-export const storeValue = (key: string, token: string) => {
+export const setStoreValue = (key: string, token: string) => {
     localStorage.setItem(key, token)
 }
 //获取

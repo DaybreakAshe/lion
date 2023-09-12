@@ -1,11 +1,13 @@
 import { createAction } from "@reduxjs/toolkit";
 
+export const setId = createAction<string>("SET_ID");
+export const deleteId = createAction<string>("DELETE_ID");
 
-export const setUsername = createAction<string>("SET_USERNAME");
-export const deleteName = createAction<string>("DELETE_USERNAME");
+export const setUserName = createAction<string>("SET_USERNAME");
+export const deleteUserName = createAction<string>("DELETE_USERNAME");
 
-export const setNickname = createAction<string>("SET_NICKNAME");
-export const deleteNickname = createAction<string>("DELETE_NICKNAME");
+export const setNickName = createAction<string>("SET_NICKNAME");
+export const deleteNickName = createAction<string>("DELETE_NICKNAME");
 
 export const setAvatar = createAction<string>("SET_AVATAR");
 export const deleteAvatar = createAction<string>("DELETE_AVATAR");
