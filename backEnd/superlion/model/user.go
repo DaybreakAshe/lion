@@ -7,7 +7,7 @@ import "time"
 
 // 数据库映射实体结构体
 type UserEntity struct {
-	GoName    string
+	GoName    string `json:"GoName" gorm:"primaryKey"`
 	LoginName string
 	Avatar    string
 	Status    string
