@@ -52,8 +52,8 @@ const Main = () => {
     const classes = useStyles()
     const [list, setList] = useState<ArticleCardProps[]>([])
     const getArticle = async () => {
-        // const res = await getArticleList()
-        // console.log("res", res)
+        const res = await getArticleList()
+        console.log("res", res)
     }
     useEffect(() => {
         getArticle()

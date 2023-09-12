@@ -4,6 +4,7 @@ import logo from "../../../src/assets/images/home/logo.png"
 import { useState } from "react";
 import UserInfo from '../../components/userInfo/UserInfo'
 import { Link } from "react-router-dom";
+
 const useStyles = makeStyles((_theme: Theme) => ({
     content: {
         width: "100%",
@@ -46,7 +47,7 @@ const useStyles = makeStyles((_theme: Theme) => ({
 const Header = () => {
     const classes = useStyles()
     const [searchValue, setSearchValue] = useState("")
-
+   
     return (
         <>
             <Box className={classes.content}>
