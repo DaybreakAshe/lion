@@ -6,11 +6,9 @@ package webConfig
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"github.com/u2takey/go-utils/json"
 	"log"
 	"strings"
 	"superlion/config"
-	"superlion/service"
 )
 
 const (
@@ -54,10 +52,8 @@ func LionTokenFilter() gin.HandlerFunc {
 			return
 		} else {
 			// 用户缓存存在：
-			lUser := &service.LionUserInfo{}
-			eor := json.Unmarshal([]byte(userJson), lUser)
-			log.Printf("json format error :%s\n", eor)
-			c.Set("lUser", lUser)
+			log.Printf("login user : %s\n", userJson)
+			c.Set("lUser", userJson)
 		}
 	}
 }
