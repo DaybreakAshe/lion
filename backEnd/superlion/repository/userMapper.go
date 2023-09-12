@@ -5,7 +5,6 @@ package repository
 
 import (
 	"log"
-	"superlion/model"
 	"sync"
 	"time"
 )
@@ -51,13 +50,13 @@ func NewUserDaoInstance() *UserDao {
 /**
 通过googleId查询用户
 */
-func (*UserDao) GetUserInfoByGId(gid string) (*model.UserEntity, string) {
+func (*UserDao) GetUserInfoByGId(gid string) (*UserEntity, string) {
 
 	if len(gid) == 0 {
 		return nil, "id不可以为空！"
 	}
 
-	user := &model.UserEntity{}
+	user := &UserEntity{}
 
 	err := db.First(user).Error
 
@@ -70,7 +69,7 @@ func (*UserDao) GetUserInfoByGId(gid string) (*model.UserEntity, string) {
 /**
 保存用户信息
 */
-func (*UserDao) SaveUerInfoToDB(user *model.UserEntity) (int, string) {
+func (*UserDao) SaveUerInfoToDB(user *UserEntity) (int, string) {
 
 	if len(user.GoId) == 0 {
 		return 0, "gid不可以为空！"
