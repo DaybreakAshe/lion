@@ -18,6 +18,10 @@ var (
 
 func main() {
 
+	server()
+}
+
+func server() {
 	// 1、连接数据库：
 	err := repository.InitMysqlDB()
 	if err != nil {

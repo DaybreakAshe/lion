@@ -17,8 +17,7 @@ import (
 )
 
 var (
-	ctx    = context.Background()
-	redisP = config.GetRedisHelper()
+	ctx = context.Background()
 )
 
 func PrintHello() {
@@ -119,6 +118,8 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 保存登录信息到redis，设置3天过期 todo
 */
 func SaveTokenToCache(user *GoUserInfo) {
+
+	redisP := config.GetRedisHelper()
 
 	// 缓存3天
 	name, err := redisP.Set(ctx, user.LionToken, user, 24*3*time.Hour).Result()
