@@ -3,6 +3,7 @@ import { makeStyles } from '@mui/styles'
 import logo from "../../../src/assets/images/home/logo.png"
 import { useState } from "react";
 import UserInfo from '../../components/userInfo/UserInfo'
+import { Link } from "react-router-dom";
 const useStyles = makeStyles((_theme: Theme) => ({
     content: {
         width: "100%",
@@ -49,10 +50,18 @@ const Header = () => {
     return (
         <>
             <Box className={classes.content}>
-                <img src={logo} alt="logo" style={{
-                    width: "60px",
-                    height: "60px",
-                }} />
+                <Link to="/">
+                    <img
+                        src={logo}
+                        alt="logo"
+                        style={{
+                            width: "60px",
+                            height: "60px",
+                            cursor: "pointer",
+                        }}
+                    />
+                </Link>
+
                 <Box className={classes.searchBox}>
                     <TextField
                         size="small"
@@ -62,7 +71,7 @@ const Header = () => {
                         className={classes.inputStyle}
                     />
                 </Box>
-                <UserInfo/>
+                <UserInfo />
             </Box>
         </>
     )

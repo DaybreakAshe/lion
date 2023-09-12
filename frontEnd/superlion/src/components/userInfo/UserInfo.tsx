@@ -4,11 +4,13 @@ import { makeStyles } from '@mui/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import CircularProgress from '@mui/material/CircularProgress';
 import google_ico from '../../assets/images/login/ico-google.svg'
-import { getStoredValue, storeValue } from '../../utils/storage'
+import { getStoredValue, storeValue, removeStoredValue } from '../../utils/storage'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import LogoutIcon from '@mui/icons-material/Logout';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import { getUserInfo } from '../../services/login/login.service'
-import { setUsername, setNickname, setAvatar, setEmail } from '../../store/actions/actions'
+import { setId, setUserName, setNickName, setAvatar, setEmail } from '../../store/actions/actions'
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
         padding: "25px 10px",
@@ -102,6 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: "center",
         boxSizing: "border-box",
         paddingLeft: "24px",
+        color: "#000000",
         "&:hover": {
             background: "#F2F4F8"
         }
@@ -109,7 +112,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     infoBoxIco: {
         width: "18px",
         height: "20px",
-        marginRight: "12px"
+        marginRight: "12px",
+        color: "#7D849B"
     },
     infoBoxText: {
         fontWeight: 900,
@@ -127,6 +131,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const UserInfo = () => {
     const classes = useStyles()
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false)
     const isLogin = getStoredValue('access_token')
     const [loading, setLoading] = useState<boolean>(false)
@@ -134,6 +139,7 @@ const UserInfo = () => {
     let url = location.href;
     const avatar = useSelector((state: any) => state.avatar)
     const userName = useSelector((state: any) => state.username)
+    const nickName = useSelector((state: any) => state.nickname)
     const [isShow, setIsShow] = useState<boolean>(false)
     const pathSegments = window.location.origin
     //获取地址栏url
@@ -155,12 +161,25 @@ const UserInfo = () => {
         return params;
     }
     const handleUserInfo = async (info: any) => {
-        console.log("传的参数##", info)
         const res = await getUserInfo(info)
-        console.log("结果##", res)
-        if (res) {
-            storeValue('access_token', res?.access_token || '')
+        if (res && res.data && res.data.code === '200' && res.data.data) {
+            const info = res.data.data
+            storeValue('access_token', 'EAVMZ8v3bQo8aMy6vAbvz2GYX8Lg06VAaCgYKAQwSARESFQGOcNnCc0S2SOpFF7L1b6ESx8v6SA0169')
+            dispatch(setId(info?.id || ''))
+            dispatch(setEmail(info?.email || ''))
+            dispatch(setAvatar(info?.picture || ''))
+            dispatch(setUserName(info?.name || ''))
+            dispatch(setNickName(info?.name || info?.email || ''))
+            navigate('/')
         }
+    }
+    const logout = () => {
+        removeStoredValue('access_token')
+        dispatch(setId(''))
+        dispatch(setEmail(''))
+        dispatch(setAvatar(''))
+        dispatch(setUserName(''))
+        navigate('/')
     }
     useEffect(() => {
         if (url && !isLogin) {
@@ -196,7 +215,7 @@ const UserInfo = () => {
                                 e.nativeEvent.stopImmediatePropagation();
                             }}>
                                 <Avatar src={avatar} style={{ width: "72px", height: "72px" }} />
-                                <span className={classes.nameText}>{userName}</span>
+                                <span className={classes.nameText}>{nickName}</span>
                             </Box>
                             <Box>
                                 <Box
@@ -206,6 +225,12 @@ const UserInfo = () => {
                                     <PermIdentityIcon className={classes.infoBoxIco} />
                                     <span className={classes.infoBoxText}>My Profile</span>
                                 </Box>
+                                <Box className={classes.infoBox}
+                                    onClick={logout}
+                                >
+                                    <LogoutIcon className={classes.infoBoxIco} />
+                                    <span className={classes.infoBoxText}>Log Out</span>
+                                </Box>
                             </Box>
                         </Box>
                     </Box>
@@ -214,7 +239,6 @@ const UserInfo = () => {
                         log in
                     </Button>
             }
-
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle style={{
                     display: "flex",

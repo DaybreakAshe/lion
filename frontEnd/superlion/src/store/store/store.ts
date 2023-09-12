@@ -12,11 +12,19 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 const initialState = {
-
+    id: null,
+    username: null,
+    nickname: null,
+    avatar: null,
+    email: null,
 }
 
 function reducer(state = initialState, action: AnyAction) {
     switch (action.type) {
+        case 'SET_ID':
+            return { ...state, id: action.payload };
+        case 'DELETE_ID':
+            return { ...state, id: null };
         case 'SET_USERNAME':
             return { ...state, username: action.payload };
         case 'DELETE_USERNAME':
