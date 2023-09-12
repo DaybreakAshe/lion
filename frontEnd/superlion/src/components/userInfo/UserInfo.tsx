@@ -4,18 +4,17 @@ import { makeStyles } from '@mui/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import CircularProgress from '@mui/material/CircularProgress';
 import google_ico from '../../assets/images/login/ico-google.svg'
-import { getStoredValue, storeValue, removeStoredValue } from '../../utils/storage'
+import { getStoredValue, setStoreValue, removeStoredValue } from '../../utils/storage'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import LogoutIcon from '@mui/icons-material/Logout';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import { getUserInfo } from '../../services/login/login.service'
 import { setId, setUserName, setNickName, setAvatar, setEmail } from '../../store/actions/actions'
 import SnackbarMessage from '../Snackbar/Snackbar'
 import axios from 'axios';
 
-const clientId = '32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com'; // 你的 Google OAuth 2.0 客户端ID
-const clientSecret = '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'; // 你的 Google OAuth 2.0 客户端密钥
+const clientId = '32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com';
+const clientSecret = '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';
 
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
@@ -122,7 +121,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: "#7D849B"
     },
     infoBoxText: {
-        fontWeight: 900,
+        fontWeight: 700,
         fontSize: '16px',
         color: '#7D849B'
     },
@@ -168,35 +167,17 @@ const UserInfo = () => {
         }
         return params;
     }
-    // const handleUserInfo = useCallback(async (info: any) => {
-    //     const res = await getUserInfo(info)
-    //     if (res && res.data && res.data.code === '200' && res.data.data) {
-    //         const info = res.data.data
-    //         storeValue('access_token', 'EAVMZ8v3bQo8aMy6vAbvz2GYX8Lg06VAaCgYKAQwSARESFQGOcNnCc0S2SOpFF7L1b6ESx8v6SA0169')
-    //         dispatch(setId(info?.id || ''))
-    //         dispatch(setEmail(info?.email || ''))
-    //         dispatch(setAvatar(info?.picture || ''))
-    //         dispatch(setUserName(info?.name || ''))
-    //         dispatch(setNickName(info?.name || info?.email || ''))
-    //         // navigate('/')
-    //     } else {
-    //         setAlertMessage('Login failed, please try again later')
-    //         setSeverity('error')
-    //         setIsOpen(true)
-    //     }
-    // }, [dispatch, navigate])
-
     const handleCode = useCallback(async (code: string) => {
         const data = new URLSearchParams();
-        data.append('code', code);
+        data.append('code', decodeURIComponent(code));
         data.append('client_id', clientId);
         data.append('client_secret', clientSecret);
         data.append('redirect_uri', redirectUri);
         data.append('grant_type', 'authorization_code');
-        console.log("data", data.toString())
         axios.post('https://oauth2.googleapis.com/token', data)
             .then((response) => {
                 const { access_token, refresh_token } = response.data;
+                setStoreValue('access_token', access_token || '')
                 axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
                     headers: {
                         'Authorization': `Bearer ${access_token}`,
@@ -205,19 +186,25 @@ const UserInfo = () => {
                 })
                     .then(userResponse => {
                         const userInfo = userResponse.data;
-                        console.log('用户信息：', userInfo);
+                        dispatch(setId(userInfo?.id || ''))
+                        dispatch(setEmail(userInfo?.email || ''))
+                        dispatch(setAvatar(userInfo?.picture || ''))
+                        dispatch(setUserName(userInfo?.name || ''))
+                        dispatch(setNickName(userInfo?.name || userInfo?.email || ''))
+                        navigate('/')
                     })
                     .catch(error => {
-                        console.error('获取用户信息时出错：', error);
+                        setAlertMessage('获取用户信息时出错')
+                        setSeverity('error')
+                        setIsOpen(true)
                     });
-
-                console.log('access_token：', access_token);
-                console.log('refresh_token：', refresh_token);
             })
             .catch((err) => {
-                console.error('获取access_token和refresh_token时出错：', err);
+                setAlertMessage('获取access_token和refresh_token时出错')
+                setSeverity('error')
+                setIsOpen(true)
             })
-    }, [redirectUri])
+    }, [dispatch, navigate, redirectUri])
 
     const logout = () => {
         removeStoredValue('access_token')
@@ -231,13 +218,6 @@ const UserInfo = () => {
     useEffect(() => {
         if (url && !isLogin) {
             const res = parseUrl(url)
-            console.log("url--", res)
-            // if (res.access_token) {
-            //     const param = {
-            //         accessToken: res.access_token
-            //     }
-            //     handleUserInfo(param)
-            // }
             if (res.code) {
                 handleCode(res.code)
             }
