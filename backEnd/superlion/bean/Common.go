@@ -1,6 +1,6 @@
 package bean
 
-// 登录请求bean
+// LoginReq 登录请求bean
 type LoginReq struct {
 	Name   string
 	Passwd string
