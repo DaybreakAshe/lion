@@ -6,8 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"os"
 	"runtime/debug"
 	"superlion/config"
+	"superlion/repository"
 )
 
 var (
@@ -17,12 +19,12 @@ var (
 func main() {
 
 	// 1、连接数据库：
-	//err := repository.InitMysqlDB()
-	//if err != nil {
-	//	// mysql连接失败：
-	//	fmt.Printf("mysql connect failed :{%s}...", err)
-	//	os.Exit(-1)
-	//}
+	err := repository.InitMysqlDB()
+	if err != nil {
+		// mysql连接失败：
+		fmt.Printf("mysql connect failed :{%s}...", err)
+		os.Exit(-1)
+	}
 
 	// 2、连接redis:
 	rdb := config.NewRedisHelper()
