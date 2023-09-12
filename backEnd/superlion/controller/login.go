@@ -52,7 +52,7 @@ func GetUserInfoByGId(c *gin.Context) {
 	gid := c.Param("gid")
 
 	data, err := service.GetUserInfoByGoId(gid)
-	if err != nil {
+	if err == nil {
 		c.JSON(http.StatusOK, bean.CommonResponse{
 			Code: 200,
 			Data: *data,
