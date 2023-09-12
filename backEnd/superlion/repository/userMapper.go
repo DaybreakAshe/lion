@@ -4,6 +4,7 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -58,10 +59,10 @@ func (*UserDao) GetUserInfoByGId(gid string) (*UserEntity, string) {
 
 	user := &UserEntity{}
 
-	err := db.Where("go_id = ?", gid).Take(user)
+	err := db.Where("go_id = ?", gid).Take(user).Error
 
 	if err != nil {
-		log.Printf("query user from db failed:%s\n", err.Error)
+		fmt.Printf("query user from db failed:%s\n", err.Error())
 		return nil, "query db error。"
 	}
 	return user, ""
