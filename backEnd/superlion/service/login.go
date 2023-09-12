@@ -104,6 +104,11 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 				}
 
 			}
+		} else {
+			rsp.Code = 608
+			rsp.Msg = "token无效"
+			errMsg = "errMsg"
+			return rsp, errMsg
 		}
 	}
 	fmt.Printf("ready to return :%s\n", *rsp)
