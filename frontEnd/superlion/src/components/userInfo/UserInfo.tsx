@@ -11,6 +11,12 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import { getUserInfo } from '../../services/login/login.service'
 import { setId, setUserName, setNickName, setAvatar, setEmail } from '../../store/actions/actions'
+import SnackbarMessage from '../Snackbar/Snackbar'
+import axios from 'axios';
+
+const clientId = '32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com'; // 你的 Google OAuth 2.0 客户端ID
+const clientSecret = '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'; // 你的 Google OAuth 2.0 客户端密钥
+
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
         padding: "25px 10px",
@@ -142,11 +148,13 @@ const UserInfo = () => {
     const nickName = useSelector((state: any) => state.nickname)
     const [isShow, setIsShow] = useState<boolean>(false)
     const pathSegments = window.location.origin
-    //获取地址栏url
+    const [alertMessage, setAlertMessage] = useState('');
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [severity, setSeverity] = useState<'error' | 'warning' | 'info' | 'success'>('info');
     const redirectUri = pathSegments === 'http://localhost:3000' ? 'http://localhost:3000' : 'https://superlion.vercel.app'
     const youtubeLogin = async () => {
         setLoading(true)
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&include_granted_scopes=true&response_type=token&state=3EAB37D9D5310BFE&redirect_uri=${redirectUri}&client_id=32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com`
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&include_granted_scopes=true&response_type=code&state=3EAB37D9D5310BFE&redirect_uri=${redirectUri}&client_id=${clientId}&access_type=offline`
     }
     const parseUrl = (url: string) => {
         if (url.indexOf("#") > -1) {
@@ -160,40 +168,90 @@ const UserInfo = () => {
         }
         return params;
     }
-    const handleUserInfo = async (info: any) => {
-        const res = await getUserInfo(info)
-        if (res && res.data && res.data.code === '200' && res.data.data) {
-            const info = res.data.data
-            storeValue('access_token', 'EAVMZ8v3bQo8aMy6vAbvz2GYX8Lg06VAaCgYKAQwSARESFQGOcNnCc0S2SOpFF7L1b6ESx8v6SA0169')
-            dispatch(setId(info?.id || ''))
-            dispatch(setEmail(info?.email || ''))
-            dispatch(setAvatar(info?.picture || ''))
-            dispatch(setUserName(info?.name || ''))
-            dispatch(setNickName(info?.name || info?.email || ''))
-            navigate('/')
-        }
-    }
+    // const handleUserInfo = useCallback(async (info: any) => {
+    //     const res = await getUserInfo(info)
+    //     if (res && res.data && res.data.code === '200' && res.data.data) {
+    //         const info = res.data.data
+    //         storeValue('access_token', 'EAVMZ8v3bQo8aMy6vAbvz2GYX8Lg06VAaCgYKAQwSARESFQGOcNnCc0S2SOpFF7L1b6ESx8v6SA0169')
+    //         dispatch(setId(info?.id || ''))
+    //         dispatch(setEmail(info?.email || ''))
+    //         dispatch(setAvatar(info?.picture || ''))
+    //         dispatch(setUserName(info?.name || ''))
+    //         dispatch(setNickName(info?.name || info?.email || ''))
+    //         // navigate('/')
+    //     } else {
+    //         setAlertMessage('Login failed, please try again later')
+    //         setSeverity('error')
+    //         setIsOpen(true)
+    //     }
+    // }, [dispatch, navigate])
+
+    const handleCode = useCallback(async (code: string) => {
+        const data = new URLSearchParams();
+        data.append('code', code);
+        data.append('client_id', clientId);
+        data.append('client_secret', clientSecret);
+        data.append('redirect_uri', redirectUri);
+        data.append('grant_type', 'authorization_code');
+        console.log("data", data.toString())
+        axios.post('https://oauth2.googleapis.com/token', data)
+            .then((response) => {
+                const { access_token, refresh_token } = response.data;
+                axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                })
+                    .then(userResponse => {
+                        const userInfo = userResponse.data;
+                        console.log('用户信息：', userInfo);
+                    })
+                    .catch(error => {
+                        console.error('获取用户信息时出错：', error);
+                    });
+
+                console.log('access_token：', access_token);
+                console.log('refresh_token：', refresh_token);
+            })
+            .catch((err) => {
+                console.error('获取access_token和refresh_token时出错：', err);
+            })
+    }, [redirectUri])
+
     const logout = () => {
         removeStoredValue('access_token')
         dispatch(setId(''))
         dispatch(setEmail(''))
         dispatch(setAvatar(''))
         dispatch(setUserName(''))
+        dispatch(setNickName(''))
         navigate('/')
     }
     useEffect(() => {
         if (url && !isLogin) {
             const res = parseUrl(url)
-            if (res.access_token) {
-                const param = {
-                    accessToken: res.access_token
-                }
-                handleUserInfo(param)
+            console.log("url--", res)
+            // if (res.access_token) {
+            //     const param = {
+            //         accessToken: res.access_token
+            //     }
+            //     handleUserInfo(param)
+            // }
+            if (res.code) {
+                handleCode(res.code)
             }
         }
-    }, [isLogin, url])
+    }, [handleCode, isLogin, url])
+
+    useEffect(() => {
+        document.addEventListener('click', () => {
+            setIsShow(false)
+        })
+    }, [])
     return (
         <>
+            <SnackbarMessage message={alertMessage} severity={severity} duration={2000} isOpen={isOpen} />
             {
                 isLogin ?
                     <Box className={classes.content}>
@@ -215,7 +273,7 @@ const UserInfo = () => {
                                 e.nativeEvent.stopImmediatePropagation();
                             }}>
                                 <Avatar src={avatar} style={{ width: "72px", height: "72px" }} />
-                                <span className={classes.nameText}>{nickName}</span>
+                                <span className={classes.nameText}>{nickName || userName || ''}</span>
                             </Box>
                             <Box>
                                 <Box
