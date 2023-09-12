@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/mitchellh/mapstructure"
 	"github.com/u2takey/go-utils/json"
@@ -16,12 +17,9 @@ import (
 )
 
 var (
-	ctx = context.Background()
+	ctx          = context.Background()
+	userNotFound = errors.New("user not found")
 )
-
-func PrintHello() {
-	fmt.Println("hello !!!!!!")
-}
 
 /**
 获取google授权后信息,
@@ -50,7 +48,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 	// fmt.Printf("get google response info:%s\n" + resp.Body.Close().Error())
 	if eor != nil {
 
-		rsp.Code = "604"
+		rsp.Code = 604
 		rsp.Msg = "请求google出错了"
 		fmt.Printf("get google info error:%s\n", eor)
 		fmt.Printf("get google url:%s, rsp code:%d\n", url, resp.StatusCode)
@@ -61,7 +59,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 			result, err := ParseResponse(resp)
 			if err != nil {
-				rsp.Code = "601"
+				rsp.Code = 601
 				rsp.Msg = "json转换出错"
 				fmt.Printf("json prase error :%s\n", err.Error())
 			}
@@ -72,14 +70,14 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 			perr := mapstructure.Decode(&result, goUserInfo)
 
 			if perr != nil {
-				rsp.Code = "601"
+				rsp.Code = 601
 				rsp.Msg = "json格式化出错"
 				fmt.Printf("json prase error :%s\n", perr.Error())
 			} else {
 				jsonData, err := json.Marshal(goUserInfo)
 				goUserInfo.GoToken = params.AccessToken
 				if err != nil {
-					rsp.Code = "601"
+					rsp.Code = 601
 					rsp.Msg = "json格式化出错!"
 					fmt.Printf("json format error:%s\n", err.Error)
 				} else {
@@ -91,7 +89,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 						goUserInfo.LionToken = ltoken
 						SaveTokenToCache(goUserInfo)
 					}
-					rsp.Code = "200"
+					rsp.Code = 200
 					rsp.Data = *goUserInfo
 				}
 
@@ -140,8 +138,11 @@ func SaveUserInfoToDB(user *GoUserInfo) (int, string) {
 		GoPicture:       user.Picture,
 		GoToken:         user.LionToken,
 		GoVerifiedEmail: user.VerifiedEmail,
-		Status:          "00",
-		CreateTime:      time.Now(),
+
+		LoginName:  user.Name,
+		Avatar:     user.Picture,
+		Status:     "00",
+		CreateTime: time.Now(),
 	}
 
 	rows, eor := repository.NewUserDaoInstance().SaveUerInfoToDB(userEntity)
@@ -184,6 +185,32 @@ func ParseResponse(response *http.Response) (map[string]interface{}, error) {
 	}
 
 	return result, err
+}
+
+/**
+根据谷歌id获取用户信息
+*/
+func GetUserInfoByGoId(gid string) (*LionUserInfo, error) {
+
+	if len(gid) == 0 {
+		return nil, errors.New("gid不可以为空")
+	}
+
+	user, _ := repository.NewUserDaoInstance().GetUserInfoByGId(gid)
+
+	if user != nil {
+		lionUser := &LionUserInfo{
+			GoId:     user.GoId,
+			GoName:   user.GoName,
+			GoEmail:  user.GoEmail,
+			UserName: user.LoginName,
+			Avatar:   user.Avatar,
+		}
+		return lionUser, nil
+	} else {
+		return nil, userNotFound
+	}
+
 }
 
 // 实现序列化？,保存redis必须实现
@@ -236,4 +263,13 @@ type GoUserInfo struct {
 	GoToken       string `json:"goToken"`
 	// 系统token
 	LionToken string `json:"lionToken"`
+}
+
+// LionUserInfo 前端可见用户bean
+type LionUserInfo struct {
+	GoId     string
+	UserName string
+	Avatar   string
+	GoName   string
+	GoEmail  string
 }

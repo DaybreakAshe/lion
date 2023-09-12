@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"superlion/bean"
 	"superlion/service"
 )
 
@@ -40,4 +42,26 @@ func GetAuthParams(c *gin.Context) {
 		})
 	}
 	fmt.Printf("receive body :%s\n", *data)
+}
+
+/**
+根据传入gid查询用户
+*/
+func GetUserInfoByGId(c *gin.Context) {
+
+	gid := c.Param("gid")
+
+	data, err := service.GetUserInfoByGoId(gid)
+	if err != nil {
+		c.JSON(http.StatusOK, bean.CommonResponse{
+			Code: 200,
+			Data: *data,
+		})
+	} else {
+		c.JSON(http.StatusOK, bean.CommonResponse{
+			Code: 608,
+			Msg:  err.Error(),
+		})
+	}
+
 }
