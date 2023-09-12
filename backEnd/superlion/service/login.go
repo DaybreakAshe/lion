@@ -138,9 +138,10 @@ func SaveUserInfoToDB(user *GoUserInfo) (int, string) {
 		GoLocale:        user.Locale,
 		GoName:          user.Name,
 		GoPicture:       user.Picture,
-		GoToken:         user.GoToken,
+		GoToken:         user.LionToken,
 		GoVerifiedEmail: user.VerifiedEmail,
 		Status:          "00",
+		CreateTime:      time.Now(),
 	}
 
 	rows, eor := repository.NewUserDaoInstance().SaveUerInfoToDB(userEntity)
