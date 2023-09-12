@@ -49,7 +49,7 @@ func GetAuthParams(c *gin.Context) {
 */
 func GetUserInfoByGId(c *gin.Context) {
 
-	gid := c.Param("gid")
+	gid := c.Query("gid")
 
 	data, err := service.GetUserInfoByGoId(gid)
 	if err == nil {
