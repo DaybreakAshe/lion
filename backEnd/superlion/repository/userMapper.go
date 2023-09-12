@@ -58,9 +58,10 @@ func (*UserDao) GetUserInfoByGId(gid string) (*UserEntity, string) {
 
 	user := &UserEntity{}
 
-	err := db.First(user).Error
+	err := db.Where("go_id = ?", gid).Take(user)
 
 	if err != nil {
+		log.Printf("query user from db failed:%s\n", err.Error)
 		return nil, "query db error。"
 	}
 	return user, ""
@@ -78,7 +79,7 @@ func (*UserDao) SaveUerInfoToDB(user *UserEntity) (int, string) {
 	// 插入数据
 	err := db.Create(user).Error
 	if err != nil {
-		log.Panicf("save user info failed: %s\n", err)
+		log.Printf("save user to db failed:%s\n", err.Error())
 		return 0, err.Error()
 	}
 	return 1, ""
