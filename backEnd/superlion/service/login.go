@@ -13,6 +13,7 @@ import (
 	"superlion/bean"
 	"superlion/config"
 	"superlion/config/webConfig"
+	"superlion/model"
 	"superlion/repository"
 	"time"
 )
@@ -136,7 +137,7 @@ func SaveTokenToCache(user *GoUserInfo) {
 
 func SaveUserInfoToDB(user *GoUserInfo) (int, string) {
 
-	userEntity := &repository.UserEntity{
+	userEntity := &model.UserEntity{
 		GoId:            user.Id,
 		GoEmail:         user.Email,
 		GoLocale:        user.Locale,
@@ -229,7 +230,7 @@ func UpdateUserInfo(user *LionUserInfo, nickName string, avatar string) string {
 	// 名称和链接均不为空
 	if len(nickName) != 0 && len(avatar) != 0 {
 
-		userEntity := &repository.UserEntity{
+		userEntity := &model.UserEntity{
 			Avatar:    avatar,
 			LoginName: nickName,
 		}

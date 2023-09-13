@@ -6,12 +6,13 @@ package repository
 import (
 	"fmt"
 	"log"
+	"superlion/model"
 	"sync"
 	"time"
 )
 
 // 数据库映射实体结构体
-type UserEntity struct {
+type UserEntityb struct {
 	GoName    string `json:"GoName,omitempty" gorm:"column:go_name"`
 	LoginName string `json:"LoginName,omitempty" gorm:"column:login_name"`
 	Avatar    string `json:"Avatar,omitempty" gorm:"column:avatar"`
@@ -30,9 +31,9 @@ type UserEntity struct {
 type UserDao struct {
 }
 
-func (UserEntity) TableName() string {
-	return "lion_user"
-}
+//func (model.UserEntity) TableName() string {
+//	return "lion_user"
+//}
 
 var userDao *UserDao
 
@@ -51,13 +52,13 @@ func NewUserDaoInstance() *UserDao {
 /**
 通过googleId查询用户
 */
-func (*UserDao) GetUserInfoByGId(gid string) (*UserEntity, string) {
+func (*UserDao) GetUserInfoByGId(gid string) (*model.UserEntity, string) {
 
 	if len(gid) == 0 {
 		return nil, "id不可以为空！"
 	}
 
-	user := &UserEntity{}
+	user := &model.UserEntity{}
 
 	err := db.Where("go_id = ?", gid).Take(user).Error
 
@@ -71,7 +72,7 @@ func (*UserDao) GetUserInfoByGId(gid string) (*UserEntity, string) {
 /**
 保存用户信息
 */
-func (*UserDao) SaveUerInfoToDB(user *UserEntity) (int, string) {
+func (*UserDao) SaveUerInfoToDB(user *model.UserEntity) (int, string) {
 
 	if len(user.GoId) == 0 {
 		return 0, "gid不可以为空！"
@@ -89,14 +90,14 @@ func (*UserDao) SaveUerInfoToDB(user *UserEntity) (int, string) {
 /**
 更新用户昵称和头像信息
 */
-func (*UserDao) UpdateUerInfo(gid string, user *UserEntity) (int, string) {
+func (*UserDao) UpdateUerInfo(gid string, user *model.UserEntity) (int, string) {
 
 	if len(user.GoId) == 0 {
 		return 0, "gid不可以为空！"
 	}
 
 	// 插入数据
-	err := db.Model(UserEntity{}).Where("go_id = ?", gid).Updates(user).Error
+	err := db.Model(model.UserEntity{}).Where("go_id = ?", gid).Updates(user).Error
 	if err != nil {
 		log.Printf("update user info failed:%s\n", err.Error())
 		return 0, err.Error()
