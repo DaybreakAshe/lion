@@ -230,6 +230,7 @@ func UpdateUserInfo(user *LionUserInfo, nickName string, avatar string) string {
 	if len(nickName) != 0 && len(avatar) != 0 {
 
 	}
+	return ""
 }
 
 /**
