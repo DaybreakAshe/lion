@@ -11,10 +11,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import { setId, setUserName, setNickName, setAvatar, setEmail } from '../../store/actions/actions'
 import SnackbarMessage from '../Snackbar/Snackbar'
-import axios from 'axios';
+import { getUserInfo } from '../../services/login/login.service'
 
 const clientId = '32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com';
-const clientSecret = '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';
+// const clientSecret = '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';
 
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
@@ -153,7 +153,7 @@ const UserInfo = () => {
     const redirectUri = pathSegments === 'http://localhost:3000' ? 'http://localhost:3000' : 'https://superlion.vercel.app'
     const youtubeLogin = async () => {
         setLoading(true)
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&include_granted_scopes=true&response_type=code&state=3EAB37D9D5310BFE&redirect_uri=${redirectUri}&client_id=${clientId}&access_type=offline`
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&response_type=token&state=3EAB37D9D5310BFE&redirect_uri=${redirectUri}&client_id=${clientId}`
     }
     const parseUrl = (url: string) => {
         if (url.indexOf("#") > -1) {
@@ -167,44 +167,68 @@ const UserInfo = () => {
         }
         return params;
     }
-    const handleCode = useCallback(async (code: string) => {
-        const data = new URLSearchParams();
-        data.append('code', decodeURIComponent(code));
-        data.append('client_id', clientId);
-        data.append('client_secret', clientSecret);
-        data.append('redirect_uri', redirectUri);
-        data.append('grant_type', 'authorization_code');
-        axios.post('https://oauth2.googleapis.com/token', data)
-            .then((response) => {
-                const { access_token, refresh_token } = response.data;
-                setStoreValue('access_token', access_token || '')
-                axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
-                    headers: {
-                        'Authorization': `Bearer ${access_token}`,
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                })
-                    .then(userResponse => {
-                        const userInfo = userResponse.data;
-                        dispatch(setId(userInfo?.id || ''))
-                        dispatch(setEmail(userInfo?.email || ''))
-                        dispatch(setAvatar(userInfo?.picture || ''))
-                        dispatch(setUserName(userInfo?.name || ''))
-                        dispatch(setNickName(userInfo?.name || userInfo?.email || ''))
-                        navigate('/')
-                    })
-                    .catch(error => {
-                        setAlertMessage('获取用户信息时出错')
-                        setSeverity('error')
-                        setIsOpen(true)
-                    });
-            })
-            .catch((err) => {
-                setAlertMessage('获取access_token和refresh_token时出错')
-                setSeverity('error')
-                setIsOpen(true)
-            })
-    }, [dispatch, navigate, redirectUri])
+
+    const handleToken = useCallback(async (token: string) => {
+        const param = {
+            accessToken: token
+        }
+        const res = await getUserInfo(param)
+        if (res && res.data && res.data.data) {
+            const userInfo = res.data.data
+            setStoreValue('access_token', userInfo.lionToken || '')
+            dispatch(setId(userInfo?.id || ''))
+            dispatch(setEmail(userInfo?.email || ''))
+            dispatch(setAvatar(userInfo?.picture || ''))
+            dispatch(setUserName(userInfo?.name || ''))
+            dispatch(setNickName(userInfo?.name || userInfo?.email || ''))
+            navigate('/')
+        } else {
+            setAlertMessage('获取用户信息失败')
+            setSeverity('error')
+            setIsOpen(true)
+        }
+    }, [dispatch, navigate])
+
+    // const handleCode = useCallback(async (code: string) => {
+    //     const data = new URLSearchParams();
+    //     data.append('code', decodeURIComponent(code));
+    //     data.append('client_id', clientId);
+    //     data.append('client_secret', clientSecret);
+    //     data.append('redirect_uri', redirectUri);
+    //     data.append('grant_type', 'authorization_code');
+    //     axios.post('https://oauth2.googleapis.com/token', data)
+    //         .then((response) => {
+    //             const { access_token, refresh_token } = response.data;
+    //             handleToken(access_token)
+    //             axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${access_token}`,
+    //                     'Content-Type': 'application/x-www-form-urlencoded'
+    //                 },
+    //             })
+    //                 .then(userResponse => {
+    //                     const userInfo = userResponse.data;
+    //                     dispatch(setId(userInfo?.id || ''))
+    //                     dispatch(setEmail(userInfo?.email || ''))
+    //                     dispatch(setAvatar(userInfo?.picture || ''))
+    //                     dispatch(setUserName(userInfo?.name || ''))
+    //                     dispatch(setNickName(userInfo?.name || userInfo?.email || ''))
+    //                     // navigate('/')
+    //                 })
+    //                 .catch(error => {
+    //                     console.log(error)
+    //                     setAlertMessage('获取用户信息时出错')
+    //                     setSeverity('error')
+    //                     setIsOpen(true)
+    //                 });
+    //         })
+    //         .catch((error) => {
+    //             console.log(error)
+    //             setAlertMessage('获取access_token和refresh_token时出错')
+    //             setSeverity('error')
+    //             setIsOpen(true)
+    //         })
+    // }, [dispatch, navigate, redirectUri])
 
     const logout = () => {
         removeStoredValue('access_token')
@@ -218,11 +242,14 @@ const UserInfo = () => {
     useEffect(() => {
         if (url && !isLogin) {
             const res = parseUrl(url)
-            if (res.code) {
-                handleCode(res.code)
+            if (res?.access_token) {
+                handleToken(res.access_token)
             }
+            // if (res.code) {
+            //     handleCode(res.code)
+            // }
         }
-    }, [handleCode, isLogin, url])
+    }, [handleToken, isLogin, url])
 
     useEffect(() => {
         document.addEventListener('click', () => {
