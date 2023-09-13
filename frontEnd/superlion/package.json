@@ -18,6 +18,7 @@
     "@types/react-dom": "^18.2.7",
     "@vercel/postgres": "^0.4.1",
     "axios": "^1.5.0",
+    "dotenv-cli": "^7.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.2",
@@ -30,6 +31,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:dev": "dotenv -e .env.development react-app-rewired build",
+    "build:prod": "dotenv -e .env.production react-app-rewired build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -50,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }
