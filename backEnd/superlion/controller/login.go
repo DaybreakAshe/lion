@@ -71,15 +71,31 @@ func GetUserInfoByGId(c *gin.Context) {
 */
 func UpdateUserInfo(c *gin.Context) {
 
-	//luser, _ := c.Get("lUser")
-	//req := UpdateUserInfoBean{}
-	//eor := c.BindJSON(&req)
-	//if eor != nil {
-	//	c.JSONP(400, gin.H{
-	//		"msg": eor.Error,
-	//	})
-	//}
-	//data,err := service
+	lUser, _ := c.Get("lUser")
+
+	luserBean := GetLoginInfoByC(lUser)
+
+	req := UpdateUserInfoBean{}
+	eor := c.BindJSON(&req)
+	if eor != nil {
+		c.JSONP(400, gin.H{
+			"msg": eor.Error,
+		})
+	}
+	data := service.UpdateUserInfo(luserBean, req.nickName, req.avatar)
+
+	// 失败
+	if len(data) != 0 {
+		c.JSON(608, bean.CommonResponse{
+			Code: 608,
+			Msg:  data,
+		})
+	} else {
+		c.JSON(200, bean.CommonResponse{
+			Code: 200,
+			Msg:  "修改成功",
+		})
+	}
 }
 
 /**

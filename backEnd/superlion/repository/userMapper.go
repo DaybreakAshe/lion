@@ -85,3 +85,21 @@ func (*UserDao) SaveUerInfoToDB(user *UserEntity) (int, string) {
 	}
 	return 1, ""
 }
+
+/**
+更新用户昵称和头像信息
+*/
+func (*UserDao) UpdateUerInfo(gid string, user *UserEntity) (int, string) {
+
+	if len(user.GoId) == 0 {
+		return 0, "gid不可以为空！"
+	}
+
+	// 插入数据
+	err := db.Model(UserEntity{}).Where("go_id = ?", gid).Updates(user).Error
+	if err != nil {
+		log.Printf("update user info failed:%s\n", err.Error())
+		return 0, err.Error()
+	}
+	return 1, ""
+}

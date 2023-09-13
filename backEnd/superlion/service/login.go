@@ -229,8 +229,19 @@ func UpdateUserInfo(user *LionUserInfo, nickName string, avatar string) string {
 	// 名称和链接均不为空
 	if len(nickName) != 0 && len(avatar) != 0 {
 
+		userEntity := &repository.UserEntity{
+			Avatar:    avatar,
+			LoginName: nickName,
+		}
+
+		rows, _ := repository.NewUserDaoInstance().UpdateUerInfo(user.GoId, userEntity)
+		if rows != 0 {
+			return ""
+		} else {
+			return "failed"
+		}
 	}
-	return ""
+	return "failed"
 }
 
 /**

@@ -19,5 +19,6 @@ func InitRouter(r *gin.Engine) {
 	apiAuthRouter := r.Group("/auth")
 	apiAuthRouter.Use(webConfig.LionTokenFilter())
 	apiAuthRouter.POST("/user", controller.GetUserInfoByGId)
+	apiAuthRouter.POST("/user/edit", controller.UpdateUserInfo)
 
 }
