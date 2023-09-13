@@ -9,6 +9,6 @@ type LoginReq struct {
 // CommonResponse 登录请求bean
 type CommonResponse struct {
 	Data interface{} `json:"data"`
-	Code string      `json:"code"`
+	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
 }

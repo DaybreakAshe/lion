@@ -1,24 +1,41 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"os"
 	"runtime/debug"
+	"superlion/config"
+	"superlion/repository"
+)
+
+var (
+	ctx = context.Background()
 )
 
 func main() {
 
+	server()
+}
+
+func server() {
 	// 1、连接数据库：
-	//err := repository.InitMysqlDB()
-	//if err != nil {
-	//	// mysql连接失败：
-	//	fmt.Printf("mysql connect failed :{%s}...", err)
-	//	os.Exit(-1)
-	//}
+	err := repository.InitMysqlDB()
+	if err != nil {
+		// mysql连接失败：
+		fmt.Printf("mysql connect failed :{%s}...", err)
+		os.Exit(-1)
+	}
 
 	// 2、连接redis:
+	rdb := config.NewRedisHelper()
+	if _, err := rdb.Ping(ctx).Result(); err != nil {
+		log.Fatal(err.Error())
+		return
+	}
 
 	// 、启动服务端
 	server := gin.Default() // 创建服务

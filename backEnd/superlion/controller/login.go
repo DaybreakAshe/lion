@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"superlion/bean"
 	"superlion/service"
 )
 
@@ -39,5 +41,51 @@ func GetAuthParams(c *gin.Context) {
 			"data": *data,
 		})
 	}
-	fmt.Printf("receive body :%s\n\n", *data)
+	fmt.Printf("receive body :%s\n", *data)
+}
+
+/**
+根据传入gid查询用户
+*/
+func GetUserInfoByGId(c *gin.Context) {
+
+	gid := c.Query("gid")
+
+	data, err := service.GetUserInfoByGoId(gid)
+	if err == nil {
+		c.JSON(http.StatusOK, bean.CommonResponse{
+			Code: 200,
+			Data: *data,
+		})
+	} else {
+		c.JSON(http.StatusOK, bean.CommonResponse{
+			Code: 608,
+			Msg:  err.Error(),
+		})
+	}
+
+}
+
+/**
+用户更新头像或昵称
+*/
+func UpdateUserInfo(c *gin.Context) {
+
+	//luser, _ := c.Get("lUser")
+	//req := UpdateUserInfoBean{}
+	//eor := c.BindJSON(&req)
+	//if eor != nil {
+	//	c.JSONP(400, gin.H{
+	//		"msg": eor.Error,
+	//	})
+	//}
+	//data,err := service
+}
+
+/**
+修改信息请求bean
+*/
+type UpdateUserInfoBean struct {
+	nickName string
+	avatar   string
 }

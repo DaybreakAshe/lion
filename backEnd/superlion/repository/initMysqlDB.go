@@ -20,3 +20,7 @@ func InitMysqlDB() error {
 	return err
 
 }
+
+func getDBHandler() *gorm.DB {
+	return db
+}
