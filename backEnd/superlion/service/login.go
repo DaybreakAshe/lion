@@ -107,8 +107,8 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 			}
 		} else {
 			rsp.Code = 608
-			rsp.Msg = "token无效"
-			errMsg = "token无效"
+			rsp.Msg = "谷歌token无效"
+			errMsg = "谷歌token无效"
 			return rsp, errMsg
 		}
 	}
@@ -224,6 +224,15 @@ func (u *GoUserInfo) MarshalBinary() ([]byte, error) {
 	return json.Marshal(u)
 }
 
+func UpdateUserInfo(user *LionUserInfo, nickName string, avatar string) string {
+
+	// 名称和链接均不为空
+	if len(nickName) != 0 && len(avatar) != 0 {
+
+	}
+	return ""
+}
+
 /**
 登录信息结构体：（google返回的参数json）：
 	示例数据：
@@ -260,10 +269,10 @@ url = https://www.googleapis.com/oauth2/v2/userinfo?access_token=ya29.a0AfB_byCk
 type GoUserInfo struct {
 	Id            string `json:"id"`
 	Email         string `json:"email"`
-	VerifiedEmail bool   `json:"verifiedEmail"`
+	VerifiedEmail bool   `json:"verified_email"`
 	Name          string `json:"name"`
-	GivenName     string `json:"givenName"`
-	FamilyName    string `json:"familyName"`
+	GivenName     string `json:"given_name"`
+	FamilyName    string `json:"family_name"`
 	Picture       string `json:"picture"`
 	Locale        string `json:"locale"`
 	GoToken       string `json:"goToken"`
