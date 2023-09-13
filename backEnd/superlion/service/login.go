@@ -225,21 +225,20 @@ func (u *GoUserInfo) MarshalBinary() ([]byte, error) {
 	return json.Marshal(u)
 }
 
-func UpdateUserInfo(user *LionUserInfo, nickName string, avatar string) string {
+func UpdateUserInfo(user *GoUserInfo, nickName string, avatar string) string {
 
 	// 名称和链接均不为空
 	if len(nickName) != 0 && len(avatar) != 0 {
-
 		userEntity := &model.UserEntity{
 			Avatar:    avatar,
 			LoginName: nickName,
 		}
 
-		rows, _ := repository.NewUserDaoInstance().UpdateUerInfo(user.GoId, userEntity)
+		rows, err := repository.NewUserDaoInstance().UpdateUerInfo(user.Id, userEntity)
 		if rows != 0 {
 			return ""
 		} else {
-			return "failed"
+			return err
 		}
 	}
 	return "failed"

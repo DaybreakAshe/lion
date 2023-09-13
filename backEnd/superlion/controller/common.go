@@ -10,9 +10,9 @@ import (
 	"superlion/service"
 )
 
-func GetLoginInfoByC(luser any) *service.LionUserInfo {
+func GetLoginInfoByC(luser any) *service.GoUserInfo {
 
-	luserBean := &service.LionUserInfo{}
+	luserBean := &service.GoUserInfo{}
 
 	err := json.Unmarshal([]byte(fmt.Sprintln(luser)), luserBean)
 

@@ -92,7 +92,7 @@ func (*UserDao) SaveUerInfoToDB(user *model.UserEntity) (int, string) {
 */
 func (*UserDao) UpdateUerInfo(gid string, user *model.UserEntity) (int, string) {
 
-	if len(user.GoId) == 0 {
+	if len(gid) == 0 {
 		return 0, "gid不可以为空！"
 	}
 
