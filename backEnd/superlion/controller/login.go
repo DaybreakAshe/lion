@@ -75,7 +75,7 @@ func UpdateUserInfo(c *gin.Context) {
 
 	luserBean := GetLoginInfoByC(lUser)
 
-	req := &UpdateUserInfoBean{}
+	req := &bean.UpdateUserInfoBean{}
 	eor := c.BindJSON(req)
 	if eor != nil {
 		c.JSONP(400, gin.H{
@@ -83,8 +83,8 @@ func UpdateUserInfo(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Printf("edit infos,n:[%s],a:[%s]\n", req.NickName, req.Avatar)
-	data := service.UpdateUserInfo(luserBean, req.NickName, req.Avatar)
+	//fmt.Printf("edit infos,n:[%s],a:[%s]\n", req.)
+	data := service.UpdateUserInfo(luserBean, req)
 
 	// 失败
 	if len(data) != 0 {
@@ -98,12 +98,4 @@ func UpdateUserInfo(c *gin.Context) {
 			Msg:  "修改成功",
 		})
 	}
-}
-
-/**
-修改信息请求bean
-*/
-type UpdateUserInfoBean struct {
-	NickName string
-	Avatar   string
 }

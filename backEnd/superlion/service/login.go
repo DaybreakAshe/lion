@@ -225,13 +225,17 @@ func (u *GoUserInfo) MarshalBinary() ([]byte, error) {
 	return json.Marshal(u)
 }
 
-func UpdateUserInfo(user *GoUserInfo, nickName string, avatar string) string {
+func UpdateUserInfo(user *GoUserInfo, req *bean.UpdateUserInfoBean) string {
+
+	nickName := req.NickName
+	avatar := req.Avatar
 
 	// 名称和链接均不为空
 	if len(nickName) != 0 && len(avatar) != 0 {
 		userEntity := &model.UserEntity{
 			Avatar:    avatar,
 			LoginName: nickName,
+			Signature: req.Signature,
 		}
 
 		rows, err := repository.NewUserDaoInstance().UpdateUerInfo(user.Id, userEntity)

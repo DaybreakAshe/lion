@@ -20,6 +20,7 @@ type UserEntity struct {
 	GoPicture       string    `json:"GoPicture,omitempty" gorm:"column:go_picture"`
 	GoLocale        string    `json:"GoLocale,omitempty" gorm:"column:go_locale"`
 	CreateTime      time.Time `json:"CreateTime" gorm:"column:create_time"`
+	Signature       string    `json:"signature" gorm:"column:signature"`
 }
 
 func (UserEntity) TableName() string {
