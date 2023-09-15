@@ -20,6 +20,6 @@ func InitRouter(r *gin.Engine) {
 	apiAuthRouter.Use(config.LionTokenFilter())
 	apiAuthRouter.POST("/user", controller.GetUserInfoByGId)
 	apiAuthRouter.POST("/user/edit", controller.UpdateUserInfo)
-	apiRouter.POST("/upload", controller.PictureUpload)
+	apiAuthRouter.POST("/upload", controller.PictureUpload)
 
 }
