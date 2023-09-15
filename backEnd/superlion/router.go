@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"superlion/config/webConfig"
+	"superlion/config"
 	"superlion/controller"
 )
 
@@ -17,7 +17,7 @@ func InitRouter(r *gin.Engine) {
 
 	// 鉴权
 	apiAuthRouter := r.Group("/auth")
-	apiAuthRouter.Use(webConfig.LionTokenFilter())
+	apiAuthRouter.Use(config.LionTokenFilter())
 	apiAuthRouter.POST("/user", controller.GetUserInfoByGId)
 	apiAuthRouter.POST("/user/edit", controller.UpdateUserInfo)
 

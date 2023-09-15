@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"superlion/bean"
 	"superlion/config"
-	"superlion/config/webConfig"
 	"superlion/model"
 	"superlion/repository"
 	"time"
@@ -125,8 +124,17 @@ func SaveTokenToCache(user *GoUserInfo) {
 
 	redisP := config.GetRedisHelper()
 
+	loginUser := &LionUserInfo{
+		GoId:      user.Id,
+		GoName:    user.Name,
+		GoEmail:   user.Email,
+		GoToken:   user.GoToken,
+		LionToken: user.LionToken,
+		Avatar:    user.Picture,
+	}
+
 	// 缓存3天
-	name, err := redisP.Set(ctx, webConfig.RedisPre+user.LionToken, user, 24*3*time.Hour).Result()
+	name, err := redisP.Set(ctx, config.RedisPre+user.LionToken, loginUser, 24*3*time.Hour).Result()
 	if err != nil {
 		log.Fatal(err)
 		log.Panicf("缓存用户失败:%s\n", err.Error())
@@ -225,7 +233,11 @@ func (u *GoUserInfo) MarshalBinary() ([]byte, error) {
 	return json.Marshal(u)
 }
 
-func UpdateUserInfo(user *GoUserInfo, req *bean.UpdateUserInfoBean) string {
+func UpdateUserInfo(user *LionUserInfo, req *bean.UpdateUserInfoBean) string {
+
+	if user == nil {
+		return "请先登录呢"
+	}
 
 	nickName := req.NickName
 	avatar := req.Avatar
@@ -238,7 +250,7 @@ func UpdateUserInfo(user *GoUserInfo, req *bean.UpdateUserInfoBean) string {
 			Signature: req.Signature,
 		}
 
-		rows, err := repository.NewUserDaoInstance().UpdateUerInfo(user.Id, userEntity)
+		rows, err := repository.NewUserDaoInstance().UpdateUerInfo(user.GoId, userEntity)
 		if rows != 0 {
 			return ""
 		} else {
@@ -297,9 +309,11 @@ type GoUserInfo struct {
 
 // LionUserInfo 前端可见用户bean
 type LionUserInfo struct {
-	GoId     string
-	UserName string
-	Avatar   string
-	GoName   string
-	GoEmail  string
+	GoId      string `json:"goId,omitempty"`
+	UserName  string `json:"userName,omitempty"`
+	Avatar    string `json:"avatar,omitempty"`
+	GoName    string `json:"goName,omitempty"`
+	GoToken   string `json:"goToken,omitempty"`
+	GoEmail   string `json:"goEmail,omitempty"`
+	LionToken string `json:"lionToken"`
 }

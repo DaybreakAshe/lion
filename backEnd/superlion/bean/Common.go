@@ -13,3 +13,11 @@ type CommonResponse struct {
 	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
 }
+
+// FileRspBean 图片资源返回bean
+type FileRspBean struct {
+	FileId    string `json:"fileId"`
+	FileName  string `json:"fileName"`
+	FileS3Url string `json:"fileS3Url"`
+	FileUrl   string `json:"fileUrl"`
+}

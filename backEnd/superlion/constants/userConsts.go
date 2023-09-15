@@ -6,3 +6,7 @@ package constants
 const (
 	NORMAL = "00"
 )
+
+const (
+	LoginUser = "luser"
+)

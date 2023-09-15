@@ -1,7 +1,7 @@
 //@program: superlion
 //@author: yanjl
 //@create: 2023-09-12 10:13
-package async
+package threadPool
 
 import "errors"
 

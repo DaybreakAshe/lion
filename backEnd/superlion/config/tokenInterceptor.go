@@ -1,14 +1,14 @@
 //@program: superlion
 //@author: yanjl
 //@create: 2023-09-12 20:43
-package webConfig
+package config
 
 import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"log"
 	"strings"
-	"superlion/config"
+	"superlion/constants"
 )
 
 const (
@@ -24,7 +24,7 @@ var (
 func LionTokenFilter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader(Header)
-		if len(token) <= 7 || !strings.HasPrefix(token, "Bearer ") {
+		if len(token) <= 7 || !strings.HasPrefix(token, Bearer) {
 			c.JSON(401, gin.H{
 				"code": "401",
 				"msg":  "#您登录了吗？",
@@ -53,14 +53,14 @@ func LionTokenFilter() gin.HandlerFunc {
 		} else {
 			// 用户缓存存在：
 			log.Printf("login user : %s\n", userJson)
-			c.Set("lUser", userJson)
+			c.Set(constants.LoginUser, userJson)
 		}
 	}
 }
 
 func checkToken(token string) string {
 
-	redisP := config.GetRedisHelper()
+	redisP := GetRedisHelper()
 
 	token = RedisPre + token
 

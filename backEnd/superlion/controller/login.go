@@ -71,9 +71,7 @@ func GetUserInfoByGId(c *gin.Context) {
 */
 func UpdateUserInfo(c *gin.Context) {
 
-	lUser, _ := c.Get("lUser")
-
-	luserBean := GetLoginInfoByC(lUser)
+	luserBean := GetLoginInfoByC(c)
 
 	req := &bean.UpdateUserInfoBean{}
 	eor := c.BindJSON(req)
