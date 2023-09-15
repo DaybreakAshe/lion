@@ -10,6 +10,7 @@ import (
 	"runtime/debug"
 	"superlion/config"
 	"superlion/repository"
+	"superlion/util"
 )
 
 var (
@@ -18,7 +19,8 @@ var (
 
 func main() {
 
-	server()
+	uploadFile()
+	// server()
 }
 
 func server() {
@@ -88,6 +90,14 @@ func cors() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func uploadFile() {
+
+	//str := "C:\\Users\\Yanjilong\\Desktop\\LinkinPark\\Lucian_25.jpg"+"Lucian.jpg";
+	util.UploadToB2()
+
+}
+
 func Recover(c *gin.Context) {
 	defer func() {
 		if r := recover(); r != nil {

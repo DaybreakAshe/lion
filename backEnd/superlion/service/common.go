@@ -58,7 +58,7 @@ func SavePicInfoToDB() {
 }
 
 func getDatePath() string {
-	dateStr := time.Now().Format("YYYY-MM-DD")
+	dateStr := time.Now().Format("YYYYMMDD")
 	return fmt.Sprintf("%s%s/", constants.PICS_FILE_PATH, dateStr)
 }
 

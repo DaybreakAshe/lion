@@ -7,13 +7,13 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/u2takey/go-utils/json"
 	"github.com/u2takey/go-utils/uuid"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"superlion/bean"
 	"superlion/config"
 	"superlion/model"
 	"superlion/repository"
+	"superlion/util"
 	"time"
 )
 
@@ -58,7 +58,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 		// 200 => 请求成功
 		if http.StatusOK == resp.StatusCode {
 
-			result, err := ParseResponse(resp)
+			result, err := util.ParseResponse(resp)
 			if err != nil {
 				rsp.Code = 601
 				rsp.Msg = "json转换出错"
@@ -189,17 +189,6 @@ func Login(req *bean.LoginReq) (string, string) {
 	// 保存redis, 返回登录信息
 
 	return token, ""
-}
-
-// ParseResponse 响应体转map
-func ParseResponse(response *http.Response) (map[string]interface{}, error) {
-	var result map[string]interface{}
-	body, err := ioutil.ReadAll(response.Body)
-	if err == nil {
-		err = json.Unmarshal(body, &result)
-	}
-
-	return result, err
 }
 
 /**
