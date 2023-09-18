@@ -19,8 +19,8 @@ var (
 
 func main() {
 
-	uploadFile()
-	// server()
+	// uploadFile()
+	server()
 }
 
 func server() {

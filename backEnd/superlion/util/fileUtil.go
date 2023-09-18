@@ -131,7 +131,7 @@ func uploadFileToB2(authToken string) {
 	rspMap, err := ParseResponse(resp)
 	jsonstr, err := json.Marshal(rspMap)
 	if err != nil {
-		fmt.Println("j2:" + err.Error())
+		fmt.Println("j2:", err.Error())
 		return
 	}
 	fmt.Printf("get upload file rsp:\nmap:%s\n", jsonstr)
