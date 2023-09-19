@@ -3,12 +3,12 @@ import { makeStyles } from '@mui/styles'
 import logo from "../../../src/assets/images/home/logo.png"
 import UserInfo from '../../components/userInfo/UserInfo'
 import { Link } from "react-router-dom";
-import Menu from "../menu/Menu";
+import Menu from "../Menu/Menu";
 import Search from "../../components/Search/Search";
 import PublishButton from "../../components/PublishButton/PublishButton";
 import { getStoredValue } from "../../utils/storage";
 import { useTheme } from '@mui/material/styles';
-import MobileMenu from "../menu/MobileMenu";
+import MobileMenu from "../Menu/MobileMenu";
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: "100%",
