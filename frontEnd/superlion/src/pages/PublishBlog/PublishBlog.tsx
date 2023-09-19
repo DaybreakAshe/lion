@@ -8,20 +8,59 @@ const useStyles = makeStyles((_theme: Theme) => ({
         width: "100%",
         height: '500px',
     },
-    buttonBox:{
-        display:"flex",
-        justifyContent:"flex-end",
-        marginTop:"20px",
+    buttonBox: {
+        display: "flex",
+        justifyContent: "flex-end",
+        marginTop: "20px",
     }
 }))
 const PublicBlog = () => {
     const classes = useStyles()
     const [content, setContent] = useState<any>(null);
+
+    // 上传回调
+    const onUpload = async (fileContent: any) => {
+        if (!fileContent) return;
+        const formData = new FormData();
+        console.log("fileContent", formData)
+        formData.append('image', fileContent);
+        const res = await fetch('https://148.100.77.194/public/files', {
+            method: 'POST',
+            body: formData
+        });
+        console.log("res##",res);
+    }
+
     const saveBlog = () => {
-        console.log("###",content,typeof content)
+        //1.获取字符串content里的图片
+        const imgReg = /<img.*?(?:>|\/>)/gi;
+        // 2.提取src
+        const srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+        const imgSrc = content.match(imgReg)?.map((img: any) => {
+            return img.match(srcReg)[1];
+        });
+        //3.提取base64
+        const base64Reg = /base64,([^\'\"]*)[\'\"]?/i;
+        const imgBase64 = imgSrc.map((img: any) => {
+            return img.match(base64Reg)[1];
+        });
+        //4.对base64字符串进行解码,转换为二进制图片数据
+        const imgBinary = imgBase64?.map((img: any) => {
+            return atob(img);
+        });
+        //5.利用二进制数据生成一个Blob对象或File对象以包装图片数据
+        const imgBlob = imgBinary?.map((img: any) => {
+            let imageFile = new File([img], 'image.png', { type: 'image/png' });
+            return imageFile;
+        });
+        console.log("imgBlob", imgBlob)
+        //6.上传图片
+        imgBlob?.map((img: any) => {
+            onUpload(img)
+        });
         //转json，传给后端
-        const contentJson = JSON.stringify(content)
-        console.log("###",contentJson,typeof contentJson)
+        // const contentJson = JSON.stringify(content)
+        // console.log("###",contentJson,typeof contentJson)
     }
     const cancel = () => {
         console.log("cancel")
@@ -73,7 +112,7 @@ const PublicBlog = () => {
                         }}
                     />
                 </Box>
-                
+
             </Box>
         </>
     )
