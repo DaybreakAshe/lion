@@ -30,14 +30,14 @@ const PublicBlog = () => {
         <>
             <Box className={classes.root}>
                 <Editor
-                    apiKey='hxv1yh7415bxinnjobb42way775jlu1rlil885zbyk4fw7om'
+                    apiKey='mv9vikpudtaga4ks85kphmm3zmb5ydoa7vgatwchzq2ag705'
                     init={{
                         height: 500,
                         menubar: true,
                         plugins: [
                             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
                         ],
                         toolbar: 'undo redo | blocks | ' +
                             'bold italic forecolor | alignleft aligncenter ' +

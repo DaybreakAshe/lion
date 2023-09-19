@@ -26,7 +26,7 @@ interface loadingButton {
     }
 }
 
-const LoadingBTN = (props: loadingButton) => {
+const ConfirmButton = (props: loadingButton) => {
     const { loading, value, handleClick, option, isShow = true } = props
     return (
         <>
@@ -68,4 +68,4 @@ const LoadingBTN = (props: loadingButton) => {
         </>
     );
 }
-export default LoadingBTN
+export default ConfirmButton

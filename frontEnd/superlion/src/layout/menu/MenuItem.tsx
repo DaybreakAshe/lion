@@ -10,6 +10,7 @@ const useStyles = makeStyles((_theme: Theme) => ({
         color: "black",
         fontSize: "18px",
         display: "inline-block",
+        cursor: "pointer",
     }
 }))
 
