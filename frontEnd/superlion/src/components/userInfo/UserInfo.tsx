@@ -14,8 +14,6 @@ import SnackbarMessage from '../Snackbar/Snackbar'
 import { getUserInfo } from '../../services/login/login.service'
 
 const clientId = '32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com';
-// const clientSecret = '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';
-
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
         padding: "25px 10px",
@@ -89,9 +87,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
         borderRadius: "8px",
         position: "absolute",
-        top: "55px",
+        top: "50px",
         right: "-10px",
         zIndex: 9999,
+        overflow: "hidden",
         [theme.breakpoints.down('md')]: {
         }
     },
