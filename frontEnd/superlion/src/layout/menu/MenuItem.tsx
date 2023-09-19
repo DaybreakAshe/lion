@@ -34,10 +34,11 @@ const MenuItem = (props: MenuItemProps) => {
                 <span
                     className={classes.item}
                     style={{
+                        textAlign: isMobile ? "center" : "left",
                         marginRight: isMobile ? "0px" : "30px",
-                        height:isMobile?"40px":"auto",
-                        lineHeight:isMobile?"40px":"auto",
-                        width:isMobile?"100%":"auto",
+                        height: isMobile ? "40px" : "auto",
+                        lineHeight: isMobile ? "40px" : "auto",
+                        width: isMobile ? "100%" : "auto",
                         color: lastSegment === path.split("/")[1] ? "#1a73e8" : "black",
                     }}
                 >{title}</span>

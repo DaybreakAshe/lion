@@ -65,6 +65,7 @@ const Header = () => {
     const classes = useStyles()
     const isLogin = getStoredValue('access_token')
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSmall = useMediaQuery(theme.breakpoints.down('lg'));
     return (
         <Box className={classes.root}>
             <Box className={classes.content}>
@@ -88,7 +89,7 @@ const Header = () => {
                     <MobileMenu />
                 }
                 <Box className={classes.searchBox}>
-                    {!isMobile && <Search />}
+                    {!isSmall && <Search />}
                     {isLogin && !isMobile && <PublishButton />}
                     <UserInfo />
                 </Box>
