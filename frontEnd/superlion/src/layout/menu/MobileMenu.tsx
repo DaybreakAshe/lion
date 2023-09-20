@@ -2,7 +2,7 @@ import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from "react";
-import MenuItem from "./MenuItem";
+import MenuItem from "./MenuItem.tsx";
 import { Link } from "react-router-dom";
 import logo from "../../../src/assets/images/home/logo.png"
 const useStyles = makeStyles((theme: Theme) => ({

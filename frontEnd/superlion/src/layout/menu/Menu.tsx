@@ -1,6 +1,6 @@
 import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
-import MenuItem from "./MenuItem";
+import MenuItem from "./MenuItem.tsx";
 const useStyles = makeStyles((_theme: Theme) => ({
     root: {
     },

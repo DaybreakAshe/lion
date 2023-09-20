@@ -2,7 +2,7 @@ import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState, useEffect } from "react";
-import MenuItem from "../../layout/Menu/MenuItem";
+import MenuItem from "../../layout/menu/MenuItem";
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: "relative",

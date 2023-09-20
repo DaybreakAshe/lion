@@ -1,14 +1,14 @@
 import { Box, Theme, useMediaQuery } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import logo from "../../../src/assets/images/home/logo.png"
-import UserInfo from '../../components/userInfo/UserInfo'
+import UserInfo from '../../components/userInfo/UserInfo.tsx'
 import { Link } from "react-router-dom";
-import Menu from "../Menu/Menu2.tsx";
-import Search from "../../components/Search/Search";
-import PublishButton from "../../components/PublishButton/PublishButton";
-import { getStoredValue } from "../../utils/storage";
+import Menu from "../menu/Menu.tsx";
+import Search from "../../components/Search/Search.tsx";
+import PublishButton from "../../components/PublishButton/PublishButton.tsx";
+import { getStoredValue } from "../../utils/storage.ts";
 import { useTheme } from '@mui/material/styles';
-import MobileMenu from "../Menu/MobileMenu";
+import MobileMenu from "../menu/MobileMenu.tsx";
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: "100%",
