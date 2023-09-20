@@ -39,9 +39,9 @@ func GetLoginInfoByC(c *gin.Context) *service.LionUserInfo {
 func PictureUpload(c *gin.Context) {
 
 	busiType := c.PostForm("busiType")
-	// c.Request.FormFile("file")
+	// c.Request.FormFile("picture")
 	user := GetLoginInfoByC(c)
-	file, fileHeader, eor := c.Request.FormFile("picture")
+	file, eor := c.FormFile("picture")
 	if eor != nil {
 		fmt.Println("获取数据失败:\n", eor.Error())
 		c.JSON(http.StatusOK, gin.H{
@@ -49,7 +49,7 @@ func PictureUpload(c *gin.Context) {
 			"message": "获取数据失败",
 		})
 	} else {
-		service.PictureUpload(&file, fileHeader, busiType, user)
+		service.PictureUpload(nil, file, busiType, user)
 	}
 
 }

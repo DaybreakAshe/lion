@@ -43,7 +43,14 @@ func PictureUpload(sourceFile *multipart.File, file *multipart.FileHeader, busiT
 
 	fileName := file.Filename
 
-	mapStr := uploadFileToSM(sourceFile, fileName)
+	var source, err = file.Open()
+	if err != nil {
+		return nil, err.Error()
+	}
+
+	// io.Copy(sourceFile, source)
+
+	mapStr := uploadFileToSM(&source, fileName)
 	//if len(err) != 0 {
 	//	return nil, err
 	//}
