@@ -4,8 +4,8 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
+	imgtype "github.com/shamsher31/goimgtype"
 	"github.com/u2takey/go-utils/uuid"
 	"io"
 	"mime/multipart"
@@ -20,13 +20,13 @@ import (
 )
 
 // 文件上传并保存
-func PictureUpload(sourceFile multipart.File, file *multipart.FileHeader, busiType string, user *LionUserInfo) (*bean.FileRspBean, string) {
+func PictureUpload(sourceFile *multipart.File, file *multipart.FileHeader, busiType string, user *LionUserInfo) (*bean.FileRspBean, string) {
 
 	if user == nil {
 		return nil, "请先登录"
 	}
 
-	util.UploadToB2()
+	//util.UploadToB2()
 
 	fileId := uuid.NewUUID()
 
@@ -41,16 +41,24 @@ func PictureUpload(sourceFile multipart.File, file *multipart.FileHeader, busiTy
 		StorePath: constants.PICS_FILE_PATH + busiType + "/" + file.Filename,
 	}
 
-	fileInfo, err := UploadResource("", sourceFile, file)
-	if len(err) != 0 {
-		return nil, err
-	}
+	fileName := file.Filename
 
-	str, _ := json.Marshal(fileInfo)
-	fmt.Printf("save file to local path:%s\nfile:%T\n", str, *fileEntity)
+	mapStr := uploadFileToSM(sourceFile, fileName)
+	//if len(err) != 0 {
+	//	return nil, err
+	//}
+
+	rsp := &bean.FileRspBean{
+		FileId:    fileId,
+		FileName:  fileName,
+		FileS3Url: "",
+		FileUrl:   mapStr,
+	}
+	//str, _ := json.Marshal(fileInfo)
+	fmt.Printf("save file to local path:%s\nfile:%T\n", "nil", *fileEntity)
 	// SavePicInfoToDB(fileInfo)
 
-	return nil, ""
+	return rsp, ""
 }
 
 func SavePicInfoToDB() {
@@ -62,8 +70,23 @@ func getDatePath() string {
 	return fmt.Sprintf("%s%s/", constants.PICS_FILE_PATH, dateStr)
 }
 
-// 上传文件
-func UploadResource(dir string, file multipart.File, sourceFile *multipart.FileHeader) (*FileLocalInfo, string) {
+// 上传文件到NGINX
+func uploadFileToSM(part *multipart.File, fileName string) string {
+
+	// 获取图片的类型
+	datatype, err2 := imgtype.Get(fileName)
+	if err2 != nil {
+		println(`不是图片文件`)
+	} else {
+		// 根据文件类型执行响应的操作
+		println(`文件类型是`, datatype)
+	}
+
+	return util.UploadFileToNginx(part, fileName)
+}
+
+// 上传文件到服务器
+func UploadResource(dir string, file *multipart.File, sourceFile *multipart.FileHeader) (*FileLocalInfo, string) {
 
 	if len(dir) == 0 {
 		dir = getDatePath()
@@ -97,7 +120,7 @@ func UploadResource(dir string, file multipart.File, sourceFile *multipart.FileH
 		return nil, err.Error()
 	}
 	defer out.Close()
-	_, err = io.Copy(out, file)
+	_, err = io.Copy(out, *file)
 	if err != nil {
 		return nil, err.Error()
 	}

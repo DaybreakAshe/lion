@@ -4,13 +4,10 @@
 package util
 
 import (
-	"bytes"
 	"context"
-	"crypto/sha1"
-	"encoding/base64"
+	"encoding/json"
 	"fmt"
-	"github.com/u2takey/go-utils/json"
-	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 )
 
@@ -36,6 +33,141 @@ var (
 	authorizationToken = ""
 )
 
+// sm.ms图床：
+var (
+	smToken = "YYLX7IFbJQBwbHoHnctnK5Fe2iOV8U4n"
+
+	uploadApi = "https://sm.ms/api/v2/upload"
+)
+
+// https://imgse.com/json，
+// 路过图床
+var (
+	seUploadApi = "https://imgse.com/json"
+	seAuthToken = "472518322270abe96d244b5b9aff9dc571c09d9b"
+	seCookie    = "_ga=GA1.1.253708145.1695000390; PHPSESSID=4os147rn9gqhirtnr509fpmqnl; Hm_lvt_d26a1af7fee9e628d7d351346aa2f13b=1695000390,1695178823; KEEP_LOGIN=7Gres%3A3c4c6bb058872d18fc8350a7ada89665af100b60bb8c3ca4e474a9db87600396863e4fecd1e7b42dac5827edb5a5c2e461dc9f8413ed67796d19a7e7e56ee33bc180e372cd86fd77919c3c655b8e421ac6283dd3%3A1695179047; __gads=ID=ed9e864bd0a0e7f7-2216bf88eae30077:T=1695000391:RT=1695189883:S=ALNI_MbRvn333Bk2qk-KpvCvxvVqN5XYEA; __gpi=UID=00000c498d101dda:T=1695000391:RT=1695189883:S=ALNI_MYukOy2W0oKowktLyeHdqJ7_TiQ4g; Hm_lpvt_d26a1af7fee9e628d7d351346aa2f13b=1695189916; _ga_CZP2J5CMLW=GS1.1.1695189881.5.1.1695189916.0.0.0"
+)
+
+// nginx服务器
+var (
+	nginxApi = "http://148.100.77.194:8999/upload"
+)
+
+func UploadPicToImagse(file *multipart.File, fileName string) {
+
+	// 异步：
+	// go uploadFileToNginx(file, fileName)
+	// path := "F:\\Xayah_37.png"
+	// smFile, _ := os.Create(path)
+
+	body := map[string]string{
+		// "source":     "C:\\Users\\Yanjilong\\Desktop\\LinkinPark\\lol\\Thresh_3.jpg",
+		"type":       "file",
+		"action":     "upload",
+		"auth_token": seAuthToken,
+		"nsfw":       "0",
+	}
+
+	// bytesF, _ := json.Marshal(body)
+
+	req, eor := newfileUploadRequest(seUploadApi, body, "source", file, fileName)
+
+	req.Header.Set("Cookie", seCookie)
+
+	if eor != nil {
+		fmt.Println("###[ERROR]:new request error:", eor.Error())
+	}
+
+	// 获取client 指针！
+	httpClient := &http.Client{}
+	// http返回的response的body必须close,否则就会有内存泄露
+	resp, eor := httpClient.Do(req)
+	defer func() { // 函数执行结束前才会调用 defer
+		resp.Body.Close()
+		fmt.Println("finish")
+	}()
+	if eor != nil {
+		fmt.Println("###[ERROR]:do post request error:", eor.Error())
+	}
+	mapStr, _ := ParseResponse(resp)
+
+	fmt.Println("[INFO] post req to save pic over :", resp.StatusCode, mapStr)
+
+}
+
+// 通过ftp 传输文件到nginx服务器 todo
+func UploadFileToNginx(file *multipart.File, fileName string) string {
+	req, eor := newfileUploadRequest(nginxApi, nil, "nFile", file, fileName)
+
+	if eor != nil {
+		fmt.Println("###[ERROR]:new request error:", eor.Error())
+	}
+
+	// 获取client 指针！
+	httpClient := &http.Client{}
+	// http返回的response的body必须close,否则就会有内存泄露
+	resp, eor := httpClient.Do(req)
+	defer func() { // 函数执行结束前才会调用 defer
+		resp.Body.Close()
+		fmt.Println("finish")
+	}()
+	if eor != nil {
+		fmt.Println("###[ERROR]:do post nginx request error:", eor.Error())
+	}
+	mapStr, _ := ParseResponse(resp)
+
+	fmt.Println("[INFO] post req to nginx save pic over :", resp.StatusCode, mapStr)
+
+	str, _ := json.Marshal(mapStr)
+	return string(str)
+}
+
+// 上传sm.ms
+/*
+func UploadPicsToSMMS() {
+
+	path := "F:\\Xayah_37.png"
+	// smFile, _ := os.Create(path)
+
+	body := map[string]string{
+		"format": "json",
+	}
+
+	// bytesF, _ := json.Marshal(body)
+
+	req, eor := newfileUploadRequest(uploadApi, body, "smfile", path)
+	// req, eor := RequestPost(uploadApi, body, "smfile", path)
+
+	//req, eor := http.NewRequest("POST", uploadApi, nil)
+	//body := &bytes.Buffer{}
+	//writer := multipart.NewWriter(body)
+	//part, _ := writer.CreateFormFile("smfile", filepath.Base(path))
+	//file, eor := os.Open(path)
+	//io.Copy(part, file)
+
+	req.Header.Set("Authorization", smToken)
+
+	if eor != nil {
+		fmt.Println("###[ERROR]:new request error:", eor.Error())
+	}
+
+	// 获取client 指针！
+	httpClient := &http.Client{}
+	// http返回的response的body必须close,否则就会有内存泄露
+	resp, eor := httpClient.Do(req)
+	defer func() { // 函数执行结束前才会调用 defer
+		resp.Body.Close()
+		fmt.Println("finish")
+	}()
+	if eor != nil {
+		fmt.Println("###[ERROR]:do post request error:", eor.Error())
+	}
+	mapStr, _ := ParseResponse(resp)
+
+	fmt.Println("[INFO] post req to save pic over :", resp.StatusCode, mapStr)
+}*/
+
+/*
 // UploadToB2 上传文件到B2
 func UploadToB2() {
 
@@ -150,7 +282,7 @@ func getFileSHA1(f []byte) string {
 	fmt.Printf("%s\n", fmt.Sprintf("%x", h.Sum(nil)))
 
 	return fmt.Sprintf("%x", h.Sum(nil))
-}
+}*/
 
 /*
 func CopyFileToB2(src, dst string) error {

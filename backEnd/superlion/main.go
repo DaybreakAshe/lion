@@ -10,7 +10,6 @@ import (
 	"runtime/debug"
 	"superlion/config"
 	"superlion/repository"
-	"superlion/util"
 )
 
 var (
@@ -94,7 +93,7 @@ func cors() gin.HandlerFunc {
 func uploadFile() {
 
 	//str := "C:\\Users\\Yanjilong\\Desktop\\LinkinPark\\Lucian_25.jpg"+"Lucian.jpg";
-	util.UploadToB2()
+	// util.UploadPicToImagse()
 
 }
 

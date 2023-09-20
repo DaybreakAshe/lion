@@ -43,13 +43,13 @@ func PictureUpload(c *gin.Context) {
 	user := GetLoginInfoByC(c)
 	file, fileHeader, eor := c.Request.FormFile("picture")
 	if eor != nil {
-		fmt.Println("获取数据失败")
+		fmt.Println("获取数据失败:\n", eor.Error())
 		c.JSON(http.StatusOK, gin.H{
 			"code":    608,
 			"message": "获取数据失败",
 		})
 	} else {
-		service.PictureUpload(file, fileHeader, busiType, user)
+		service.PictureUpload(&file, fileHeader, busiType, user)
 	}
 
 }
