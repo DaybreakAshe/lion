@@ -2,7 +2,7 @@ import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import { useState } from "react";
 import { Editor } from '@tinymce/tinymce-react';
-import ConfirmButton from "../../components/ConfirmButton/ConfirmButton";
+import ConfirmButton from "../../components/ConfirmButton/ConfirmButton2";
 import { uploadFile } from "../../services/createBlog/createBlog.service";
 const useStyles = makeStyles((_theme: Theme) => ({
     root: {
@@ -27,10 +27,9 @@ const PublicBlog = () => {
         //     method: 'POST',
         //     body: formData
         // });
-        console.log("file##", formData);
         const res= await uploadFile({
-            picture: formData,
-            busiType:''
+            picture: fileContent,
+            busiType:'11'
         })
         console.log("res##",res);
     }
@@ -52,22 +51,26 @@ const PublicBlog = () => {
         const imgBinary = imgBase64?.map((img: any) => {
             return atob(img);
         });
-        //5.利用二进制数据生成一个File对象以包装图片数据
-        const imgBlob = imgBinary?.map((img: any) => {
-            const imgBuffer = new ArrayBuffer(img.length);
-            const imgUint8 = new Uint8Array(imgBuffer);
-            for (let i = 0; i < img.length; i++) {
-                imgUint8[i] = img.charCodeAt(i);
-            }
-            const imgBlob = new Blob([imgUint8], { type: 'image/png' });
-            return new File([imgBlob], 'img.png', { type: 'image/png' });
-        });
-        
-        console.log("imgBlob", imgBlob)
-        //6.上传图片
-        imgBlob?.map((img: any) => {
+        console.log("二进制", imgBinary)
+        imgBinary?.map((img: any) => {
             onUpload(img)
         });
+        //5.利用二进制数据生成一个File对象以包装图片数据
+        // const imgBlob = imgBinary?.map((img: any) => {
+        //     const imgBuffer = new ArrayBuffer(img.length);
+        //     const imgUint8 = new Uint8Array(imgBuffer);
+        //     for (let i = 0; i < img.length; i++) {
+        //         imgUint8[i] = img.charCodeAt(i);
+        //     }
+        //     const imgBlob = new Blob([imgUint8], { type: 'image/png' });
+        //     return new File([imgBlob], 'img.png', { type: 'image/png' });
+        // });
+        
+        // console.log("imgBlob", imgBlob)
+        //6.上传图片
+        // imgBlob?.map((img: any) => {
+        //     onUpload(img)
+        // });
         //转json，传给后端
         // const contentJson = JSON.stringify(content)
         // console.log("###",contentJson,typeof contentJson)
