@@ -14,8 +14,6 @@ import SnackbarMessage from '../Snackbar/Snackbar'
 import { getUserInfo } from '../../services/login/login.service'
 
 const clientId = '32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com';
-// const clientSecret = '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';
-
 const useStyles = makeStyles((theme: Theme) => ({
     dialogContent: {
         padding: "25px 10px",
@@ -61,11 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: '#555555',
     },
     loginButton: {
-        background: "#FFB948 !important",
+        background: "#1a73e8 !important",
         color: "#fff !important",
-        width: "88px !important",
-        height: "44px !important",
-        borderRadius: "24px !important"
+        width: "80px !important",
+        height: "40px !important",
+        borderRadius: "8px !important",
+        fontSize: "10px !important",
     },
     hidden: {
         display: "none",
@@ -88,9 +87,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
         borderRadius: "8px",
         position: "absolute",
-        top: "55px",
+        top: "50px",
         right: "-10px",
         zIndex: 9999,
+        overflow: "hidden",
         [theme.breakpoints.down('md')]: {
         }
     },
@@ -189,47 +189,6 @@ const UserInfo = () => {
         }
     }, [dispatch, navigate])
 
-    // const handleCode = useCallback(async (code: string) => {
-    //     const data = new URLSearchParams();
-    //     data.append('code', decodeURIComponent(code));
-    //     data.append('client_id', clientId);
-    //     data.append('client_secret', clientSecret);
-    //     data.append('redirect_uri', redirectUri);
-    //     data.append('grant_type', 'authorization_code');
-    //     axios.post('https://oauth2.googleapis.com/token', data)
-    //         .then((response) => {
-    //             const { access_token, refresh_token } = response.data;
-    //             handleToken(access_token)
-    //             axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
-    //                 headers: {
-    //                     'Authorization': `Bearer ${access_token}`,
-    //                     'Content-Type': 'application/x-www-form-urlencoded'
-    //                 },
-    //             })
-    //                 .then(userResponse => {
-    //                     const userInfo = userResponse.data;
-    //                     dispatch(setId(userInfo?.id || ''))
-    //                     dispatch(setEmail(userInfo?.email || ''))
-    //                     dispatch(setAvatar(userInfo?.picture || ''))
-    //                     dispatch(setUserName(userInfo?.name || ''))
-    //                     dispatch(setNickName(userInfo?.name || userInfo?.email || ''))
-    //                     // navigate('/')
-    //                 })
-    //                 .catch(error => {
-    //                     console.log(error)
-    //                     setAlertMessage('获取用户信息时出错')
-    //                     setSeverity('error')
-    //                     setIsOpen(true)
-    //                 });
-    //         })
-    //         .catch((error) => {
-    //             console.log(error)
-    //             setAlertMessage('获取access_token和refresh_token时出错')
-    //             setSeverity('error')
-    //             setIsOpen(true)
-    //         })
-    // }, [dispatch, navigate, redirectUri])
-
     const logout = () => {
         removeStoredValue('access_token')
         dispatch(setId(''))
@@ -245,9 +204,6 @@ const UserInfo = () => {
             if (res?.access_token) {
                 handleToken(res.access_token)
             }
-            // if (res.code) {
-            //     handleCode(res.code)
-            // }
         }
     }, [handleToken, isLogin, url])
 
@@ -258,7 +214,7 @@ const UserInfo = () => {
     }, [])
     return (
         <>
-            <SnackbarMessage message={alertMessage} severity={severity} duration={2000} isOpen={isOpen} />
+            <SnackbarMessage message={alertMessage} severity={severity} duration={5000} isOpen={isOpen} />
             {
                 isLogin ?
                     <Box className={classes.content}>
@@ -300,7 +256,10 @@ const UserInfo = () => {
                         </Box>
                     </Box>
                     :
-                    <Button onClick={() => setOpen(true)} className={classes.loginButton}>
+                    <Button 
+                    onClick={() => setOpen(true)} 
+                    className={classes.loginButton}
+                    >
                         log in
                     </Button>
             }
