@@ -22,9 +22,8 @@ const PublicBlog = () => {
     const onUpload = async (fileContent: any) => {
         if (!fileContent) return;
         const formData = new FormData();
-        console.log("fileContent", formData)
         formData.append('image', fileContent);
-        const res = await fetch('https://148.100.77.194/public/files', {
+        const res = await fetch('https://lion.9559999.xyz:8999/upload', {
             method: 'POST',
             body: formData
         });
