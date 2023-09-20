@@ -3,6 +3,7 @@ import { makeStyles } from '@mui/styles'
 import { useState } from "react";
 import { Editor } from '@tinymce/tinymce-react';
 import ConfirmButton from "../../components/ConfirmButton/ConfirmButton";
+import { uploadFile } from "../../services/createBlog/createBlog.service";
 const useStyles = makeStyles((_theme: Theme) => ({
     root: {
         width: "100%",
@@ -18,15 +19,19 @@ const PublicBlog = () => {
     const classes = useStyles()
     const [content, setContent] = useState<any>(null);
 
-    // 上传回调
     const onUpload = async (fileContent: any) => {
         if (!fileContent) return;
         const formData = new FormData();
         formData.append('image', fileContent);
-        const res = await fetch('https://lion.9559999.xyz:8999/upload', {
-            method: 'POST',
-            body: formData
-        });
+        // const res = await fetch('https://148.100.77.194:8999/upload', {
+        //     method: 'POST',
+        //     body: formData
+        // });
+        console.log("file##", formData);
+        const res= await uploadFile({
+            picture: formData,
+            busiType:''
+        })
         console.log("res##",res);
     }
 
@@ -47,11 +52,17 @@ const PublicBlog = () => {
         const imgBinary = imgBase64?.map((img: any) => {
             return atob(img);
         });
-        //5.利用二进制数据生成一个Blob对象或File对象以包装图片数据
+        //5.利用二进制数据生成一个File对象以包装图片数据
         const imgBlob = imgBinary?.map((img: any) => {
-            let imageFile = new File([img], 'image.png', { type: 'image/png' });
-            return imageFile;
+            const imgBuffer = new ArrayBuffer(img.length);
+            const imgUint8 = new Uint8Array(imgBuffer);
+            for (let i = 0; i < img.length; i++) {
+                imgUint8[i] = img.charCodeAt(i);
+            }
+            const imgBlob = new Blob([imgUint8], { type: 'image/png' });
+            return new File([imgBlob], 'img.png', { type: 'image/png' });
         });
+        
         console.log("imgBlob", imgBlob)
         //6.上传图片
         imgBlob?.map((img: any) => {
