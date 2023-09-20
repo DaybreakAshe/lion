@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles'
 import logo from "../../../src/assets/images/home/logo.png"
 import UserInfo from '../../components/userInfo/UserInfo'
 import { Link } from "react-router-dom";
-import Menu from "../Menu/Menu";
+import Menu from "../Menu/Menu2.tsx";
 import Search from "../../components/Search/Search";
 import PublishButton from "../../components/PublishButton/PublishButton";
 import { getStoredValue } from "../../utils/storage";
