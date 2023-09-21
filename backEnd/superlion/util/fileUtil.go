@@ -9,6 +9,9 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
+	"os"
+	"path/filepath"
+	"time"
 )
 
 var (
@@ -120,6 +123,16 @@ func UploadFileToNginx(file *multipart.File, fileName string) string {
 
 	str, _ := json.Marshal(mapStr)
 	return string(str)
+}
+
+//定义一个创建文件目录的方法
+func Mkdir(basePath string) string {
+	//	1.获取当前时间,并且格式化时间
+	folderName := time.Now().Format("2006/01/02")
+	folderPath := filepath.Join(basePath, folderName)
+	//使用mkdirall会创建多层级目录
+	os.MkdirAll(folderPath, os.ModePerm)
+	return folderPath
 }
 
 // 上传sm.ms
