@@ -5,7 +5,6 @@ package service
 
 import (
 	"fmt"
-	imgtype "github.com/shamsher31/goimgtype"
 	"github.com/u2takey/go-utils/uuid"
 	"io"
 	"mime/multipart"
@@ -42,9 +41,10 @@ func PictureUpload(sourceFile *multipart.File, file *multipart.FileHeader, busiT
 	}
 
 	fileName := file.Filename
-
+	fmt.Println("open file :", fileName)
 	var source, err = file.Open()
 	if err != nil {
+		fmt.Println("open file failed:", err.Error())
 		return nil, err.Error()
 	}
 
@@ -81,13 +81,16 @@ func getDatePath() string {
 func uploadFileToSM(part *multipart.File, fileName string) string {
 
 	// 获取图片的类型
-	datatype, err2 := imgtype.Get(fileName)
-	if err2 != nil {
-		println(`不是图片文件`)
-	} else {
-		// 根据文件类型执行响应的操作
-		println(`文件类型是`, datatype)
-	}
+	//获取文件的后缀名
+	extstring := path.Ext(fileName)
+
+	println(`文件类型是:`, extstring)
+	//if err != nil {
+	//	println(`不是图片文件:`, extstring)
+	//} else {
+	//	// 根据文件类型执行响应的操作
+	//	println(`文件类型是:`, extstring)
+	//}
 
 	return util.UploadFileToNginx(part, fileName)
 }

@@ -46,34 +46,36 @@ func GetLoginInfoByC(c *gin.Context) *service.LionUserInfo {
 func PictureUpload(c *gin.Context) {
 
 	busiType := c.PostForm("busiType")
-	// c.Request.FormFile("picture")
-	file, _ := c.FormFile("picture")
+	file, eor := c.FormFile("picture")
+	// file := c.Request.MultipartForm.Value["picture"]
+	// file, fheader, eor := c.Request.FormFile("picture")
 	user := GetLoginInfoByC(c)
-	//c = getFile(file, c)
-	//if eor != nil {
-	//	fmt.Println("获取数据失败:\n", eor.Error())
-	//	c.JSON(http.StatusOK, gin.H{
-	//		"code":    608,
-	//		"message": "获取数据失败",
-	//	})
-	//	return
-	//} else {
-	data, err := service.PictureUpload(nil, file, busiType, user)
-	if len(err) != 0 {
-		c.JSON(http.StatusOK, bean.CommonResponse{
-			Data: data,
-			Msg:  err,
-			Code: 608,
+	// c = getFile(file, c)
+	if eor != nil {
+		fmt.Println("获取数据失败:\n", eor.Error())
+		c.JSON(http.StatusOK, gin.H{
+			"code":    608,
+			"message": "获取数据失败",
 		})
+		return
 	} else {
-		c.JSON(http.StatusOK, bean.CommonResponse{
-			Data: data,
-			Msg:  err,
-			Code: 0,
-		})
+		fmt.Println("file:", file.Size)
+		data, err := service.PictureUpload(nil, file, busiType, user)
+		if len(err) != 0 {
+			c.JSON(http.StatusOK, bean.CommonResponse{
+				Data: data,
+				Msg:  err,
+				Code: 608,
+			})
+		} else {
+			c.JSON(http.StatusOK, bean.CommonResponse{
+				Data: data,
+				Msg:  err,
+				Code: 0,
+			})
+		}
+		return
 	}
-	return
-	//}
 
 }
 

@@ -41,9 +41,6 @@ func server() {
 	// 、启动服务端
 	server := gin.Default() // 创建服务
 	server.Use(cors())
-	/* 处理请求 */
-
-	// mysqlservice.Mysql()
 
 	InitRouter(server)
 

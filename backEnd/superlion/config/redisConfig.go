@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/go-redis/redis/v8"
 	"sync"
 	"time"
@@ -42,6 +43,6 @@ func NewRedisHelper() *redis.Client {
 		rdh.Client = redisDB
 		redisClient = rdh
 	})
-
+	fmt.Println("redis init over,everything is OK")
 	return redisDB
 }

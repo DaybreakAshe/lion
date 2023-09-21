@@ -4,6 +4,7 @@
 package repository
 
 import (
+	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,7 @@ func InitMysqlDB() error {
 	dsn := "jnfdroot:19aa5b459e809559@tcp(mysql.sqlpub.com:3306)/jnfdcome?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
+	fmt.Println("mysql init over,everything is OK")
 	return err
 
 }
