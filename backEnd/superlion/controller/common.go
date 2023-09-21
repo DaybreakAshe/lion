@@ -40,8 +40,8 @@ func PictureUpload(c *gin.Context) {
 
 	busiType := c.PostForm("busiType")
 	// c.Request.FormFile("picture")
-	user := GetLoginInfoByC(c)
 	file, eor := c.FormFile("picture")
+	user := GetLoginInfoByC(c)
 	if eor != nil {
 		fmt.Println("获取数据失败:\n", eor.Error())
 		c.JSON(http.StatusOK, gin.H{
