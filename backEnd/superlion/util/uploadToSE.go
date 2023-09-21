@@ -72,7 +72,7 @@ func InitSession(forceAction bool) (bool, string) {
 		return false, "open file error"
 	}
 	// 2\讀取文件543行獲取token
-	rawToken := ReadLine(543, "./doc/cache.txt")
+	rawToken := ReadLine(543, ".cache.txt")
 	match = AUTH_TOKEN_PATTERN.FindStringSubmatch(rawToken)
 	authToken = match[1]
 	fmt.Println("token info :", authToken)
