@@ -9,6 +9,7 @@ import (
 	"github.com/u2takey/go-utils/json"
 	"log"
 	"net/http"
+	"superlion/bean"
 	"superlion/constants"
 	"superlion/service"
 )
@@ -48,8 +49,23 @@ func PictureUpload(c *gin.Context) {
 			"code":    608,
 			"message": "获取数据失败",
 		})
+		return
 	} else {
-		service.PictureUpload(nil, file, busiType, user)
+		data, err := service.PictureUpload(nil, file, busiType, user)
+		if len(err) != 0 {
+			c.JSON(http.StatusOK, bean.CommonResponse{
+				Data: data,
+				Msg:  err,
+				Code: 608,
+			})
+		} else {
+			c.JSON(http.StatusOK, bean.CommonResponse{
+				Data: data,
+				Msg:  err,
+				Code: 0,
+			})
+		}
+		return
 	}
 
 }
