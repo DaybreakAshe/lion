@@ -83,14 +83,17 @@ func uploadFileToSM(part *multipart.File, fileName string) string {
 	// 获取图片的类型
 	//获取文件的后缀名
 	extstring := path.Ext(fileName)
+	println(`文件类型是:`, extstring[1:])
 
-	println(`文件类型是:`, extstring)
-	//if err != nil {
-	//	println(`不是图片文件:`, extstring)
-	//} else {
-	//	// 根据文件类型执行响应的操作
-	//	println(`文件类型是:`, extstring)
-	//}
+	// 判断文件类型
+	switch extstring {
+	case ".xbm", ".tif", "pjp", ".svgz", "jpg", "jpeg", "ico", "tiff", ".gif", "svg", ".jfif", ".webp", ".png", ".bmp", "pjpeg", ".avif":
+		println("is image true")
+	// 代码
+	default:
+		println("is image false")
+		return "not is an image"
+	}
 
 	return util.UploadFileToNginx(part, fileName)
 }
