@@ -50,10 +50,10 @@ func PictureUpload(sourceFile *multipart.File, file *multipart.FileHeader, busiT
 
 	// io.Copy(sourceFile, source)
 
-	mapStr := uploadFileToSM(&source, fileName)
-	//if len(err) != 0 {
-	//	return nil, err
-	//}
+	mapStr, eor := uploadFileToSM(&source, fileName)
+	if len(eor) != 0 {
+		return nil, eor
+	}
 
 	rsp := &bean.FileRspBean{
 		FileId:    fileId,
@@ -78,7 +78,7 @@ func getDatePath() string {
 }
 
 // 上传文件到NGINX
-func uploadFileToSM(part *multipart.File, fileName string) string {
+func uploadFileToSM(part *multipart.File, fileName string) (map[string]any, string) {
 
 	// 获取图片的类型
 	//获取文件的后缀名
@@ -92,10 +92,11 @@ func uploadFileToSM(part *multipart.File, fileName string) string {
 	// 代码
 	default:
 		println("is image false")
-		return "not is an image"
+		return nil, "not is an image"
 	}
 
-	return util.UploadFileToNginx(part, fileName)
+	return util.Upload(*part), ""
+	// return util.UploadFileToNginx(part, fileName)
 }
 
 // 上传文件到服务器

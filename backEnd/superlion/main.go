@@ -20,6 +20,7 @@ func main() {
 
 	// uploadFile()
 	server()
+	// util.Upload()
 }
 
 func server() {

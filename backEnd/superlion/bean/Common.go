@@ -19,5 +19,5 @@ type FileRspBean struct {
 	FileId    string `json:"fileId"`
 	FileName  string `json:"fileName"`
 	FileS3Url string `json:"fileS3Url"`
-	FileUrl   string `json:"fileUrl"`
+	FileUrl   any    `json:"fileUrl"`
 }
