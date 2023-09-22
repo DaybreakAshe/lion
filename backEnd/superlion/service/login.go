@@ -306,3 +306,8 @@ type LionUserInfo struct {
 	GoEmail   string `json:"goEmail,omitempty"`
 	LionToken string `json:"lionToken"`
 }
+
+// 实现序列化？,保存redis必须实现
+func (u *LionUserInfo) MarshalBinary() ([]byte, error) {
+	return json.Marshal(u)
+}
