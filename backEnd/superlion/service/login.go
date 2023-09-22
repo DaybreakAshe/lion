@@ -134,7 +134,7 @@ func SaveTokenToCache(user *GoUserInfo) {
 	}
 
 	// 缓存3天
-	name, err := redisP.Set(ctx, config.RedisPre+user.LionToken, *loginUser, 24*3*time.Hour).Result()
+	name, err := redisP.Set(ctx, config.RedisPre+user.LionToken, loginUser, 24*3*time.Hour).Result()
 	if err != nil {
 		// log.Fatal(err)
 		log.Printf("缓存用户失败:%s\n", err.Error())
