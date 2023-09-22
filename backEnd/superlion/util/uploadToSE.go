@@ -62,7 +62,7 @@ func InitSession(forceAction bool) (bool, string) {
 	// 获取auth_token
 
 	// 1\创建文件
-	f, err := os.Create("./doc/cache.txt")
+	f, err := os.Create("./cache.txt")
 	if err != nil {
 		fmt.Println("error open file :", err.Error())
 	}
