@@ -50,16 +50,16 @@ func PictureUpload(sourceFile *multipart.File, file *multipart.FileHeader, busiT
 
 	// io.Copy(sourceFile, source)
 
-	mapStr, eor := util.UploadPicsToSMMS(&source, fileName)
-	if len(eor) != 0 {
-		return nil, eor
+	code, url := util.UploadPicsToSMMS(&source, fileName)
+	if code != 0 {
+		return nil, url
 	}
 
 	rsp := &bean.FileRspBean{
 		FileId:    fileId,
 		FileName:  fileName,
 		FileS3Url: "",
-		FileUrl:   mapStr,
+		FileUrl:   url,
 	}
 	//str, _ := json.Marshal(fileInfo)
 	fmt.Printf("save file to local path:%s\nfile:%T\n", "nil", *fileEntity)

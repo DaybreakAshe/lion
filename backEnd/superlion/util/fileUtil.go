@@ -168,8 +168,11 @@ func UploadPicsToSMMS(file *multipart.File, fileName string) (int, string) {
 		return UploadToPIC(file, fileName)
 	}
 	fmt.Println("[INFO] post req to save pic over :", resp.StatusCode, mapStr)
+	dataStr, _ := json.Marshal(mapStr["data"])
+	dataMap := map[string]string{}
+	json.Unmarshal(dataStr, &dataMap)
 
-	return 0, ""
+	return 0, dataMap["url"]
 }
 
 /*
