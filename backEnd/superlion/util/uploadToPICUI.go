@@ -50,9 +50,9 @@ func UploadToPIC(file *multipart.File, fileName string) (int, string) {
 
 	// 上传失败，todo：上传nginx
 	if false == mapStr["status"] {
-		fmt.Println("upload to PICUI failed:", mapStr["message"])
-		str, _ := json.Marshal(mapStr["message"])
-		return -1, string(str)
+		fmt.Println("upload to PICUI failed:", mapStr)
+		str := fmt.Sprintf("%v", mapStr["message"])
+		return -1, str
 	}
 
 	dataStr, _ := json.Marshal(mapStr["data"])

@@ -165,6 +165,7 @@ func UploadPicsToSMMS(file *multipart.File, fileName string) (int, string) {
 
 	// "message": "File too big", 表示图片大于5MB,此时使用其他图床《》
 	if "File too big" == mapStr["message"] {
+		fmt.Println("###[WARNING]:need to upload other:", mapStr["message"])
 		return UploadToPIC(file, fileName)
 	}
 	fmt.Println("[INFO] post req to save pic over :", resp.StatusCode, mapStr)
