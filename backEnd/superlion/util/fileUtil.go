@@ -54,6 +54,9 @@ var (
 // nginx服务器
 var (
 	nginxApi = "http://148.100.77.194:8999/upload"
+
+	// 获取client 指针！
+	httpClient = &http.Client{}
 )
 
 func UploadPicToImagse(file *multipart.File, fileName string) {
@@ -136,36 +139,19 @@ func Mkdir(basePath string) string {
 }
 
 // 上传sm.ms
-/*
-func UploadPicsToSMMS() {
-
-	path := "F:\\Xayah_37.png"
-	// smFile, _ := os.Create(path)
-
-	body := map[string]string{
-		"format": "json",
-	}
+// 返回0代表成功，-1代表失败，1代表请求了另外的图床
+func UploadPicsToSMMS(file *multipart.File, fileName string) (int, string) {
 
 	// bytesF, _ := json.Marshal(body)
 
-	req, eor := newfileUploadRequest(uploadApi, body, "smfile", path)
+	req, eor := newfileUploadRequest(uploadApi, nil, "smfile", file, fileName)
 	// req, eor := RequestPost(uploadApi, body, "smfile", path)
-
-	//req, eor := http.NewRequest("POST", uploadApi, nil)
-	//body := &bytes.Buffer{}
-	//writer := multipart.NewWriter(body)
-	//part, _ := writer.CreateFormFile("smfile", filepath.Base(path))
-	//file, eor := os.Open(path)
-	//io.Copy(part, file)
-
 	req.Header.Set("Authorization", smToken)
 
 	if eor != nil {
 		fmt.Println("###[ERROR]:new request error:", eor.Error())
 	}
 
-	// 获取client 指针！
-	httpClient := &http.Client{}
 	// http返回的response的body必须close,否则就会有内存泄露
 	resp, eor := httpClient.Do(req)
 	defer func() { // 函数执行结束前才会调用 defer
@@ -177,8 +163,14 @@ func UploadPicsToSMMS() {
 	}
 	mapStr, _ := ParseResponse(resp)
 
+	// "message": "File too big", 表示图片大于5MB,此时使用其他图床《》
+	if "File too big" == mapStr["message"] {
+		return UploadToPIC(file, fileName)
+	}
 	fmt.Println("[INFO] post req to save pic over :", resp.StatusCode, mapStr)
-}*/
+
+	return 0, ""
+}
 
 /*
 // UploadToB2 上传文件到B2

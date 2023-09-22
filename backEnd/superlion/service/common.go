@@ -50,7 +50,7 @@ func PictureUpload(sourceFile *multipart.File, file *multipart.FileHeader, busiT
 
 	// io.Copy(sourceFile, source)
 
-	mapStr, eor := uploadFileToSM(&source, fileName)
+	mapStr, eor := util.UploadPicsToSMMS(&source, fileName)
 	if len(eor) != 0 {
 		return nil, eor
 	}
