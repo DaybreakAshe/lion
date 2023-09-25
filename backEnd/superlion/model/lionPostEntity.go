@@ -8,7 +8,7 @@ type LionPostEntity struct {
 	Id              int64  `gorm:"primaryKey column:id;" form:"id" json:"id"`
 	AuditState      string `gorm:"column:audit_state;" form:"auditState" json:"auditState"`
 	Category        string `gorm:"column:category;" form:"category" json:"category"`
-	AuthorId        int64  `gorm:"column:author_id;" form:"authorId" json:"authorId"`
+	AuthorId        string `gorm:"column:author_id;" form:"authorId" json:"authorId"`
 	Title           string `gorm:"column:title;" form:"title" json:"title"`
 	ContentType     string `gorm:"column:content_type;" form:"contentType" json:"contentType"`
 	MarkdownContent string `gorm:"column:markdown_content;" form:"markdownContent" json:"markdownContent"`

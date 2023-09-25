@@ -40,6 +40,24 @@ func GetLoginInfoByC(c *gin.Context) *service.LionUserInfo {
 	return luserBean
 }
 
+// 封装返回结构
+func writeResponse(c *gin.Context, err string, data any) {
+
+	// 失败
+	if len(err) != 0 {
+		c.JSON(608, bean.CommonResponse{
+			Code: 608,
+			Msg:  err,
+		})
+	} else {
+		c.JSON(200, bean.CommonResponse{
+			Code: 200,
+			Msg:  "success",
+			Data: data,
+		})
+	}
+}
+
 /**
 图片上传公共函数
 */

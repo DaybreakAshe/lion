@@ -24,6 +24,10 @@ var (
 func LionTokenFilter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader(Header)
+		if _, exist := c.Get(constants.LoginUser); exist {
+			log.Printf("already login countinue...")
+			return
+		}
 		if len(token) <= 7 || !strings.HasPrefix(token, Bearer) {
 			c.JSON(401, gin.H{
 				"code": "401",

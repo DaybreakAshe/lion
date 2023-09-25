@@ -83,17 +83,5 @@ func UpdateUserInfo(c *gin.Context) {
 	}
 	//fmt.Printf("edit infos,n:[%s],a:[%s]\n", req.)
 	data := service.UpdateUserInfo(luserBean, req)
-
-	// 失败
-	if len(data) != 0 {
-		c.JSON(608, bean.CommonResponse{
-			Code: 608,
-			Msg:  data,
-		})
-	} else {
-		c.JSON(200, bean.CommonResponse{
-			Code: 200,
-			Msg:  "修改成功",
-		})
-	}
+	writeResponse(c, data, nil)
 }

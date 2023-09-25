@@ -22,4 +22,10 @@ func InitRouter(r *gin.Engine) {
 	apiAuthRouter.POST("/user/edit", controller.UpdateUserInfo)
 	apiAuthRouter.POST("/upload", controller.PictureUpload)
 
+	// 文章:
+	apiUserRouter := r.Group("/user")
+	apiUserRouter.Use(config.LionTokenFilter())
+	apiUserRouter.POST("/newTag", controller.CreateNewTag)
+	apiUserRouter.GET("/tags", controller.GetUserTags)
+
 }

@@ -55,12 +55,12 @@ func UploadToPIC(file *multipart.File, fileName string) (int, string) {
 		return -1, str
 	}
 
-	dataStr, _ := json.Marshal(mapStr["data"])
+	dataMapStr := fmt.Sprintf("%v", mapStr["data"])
 	dataMap := &map[string]any{}
-	json.Unmarshal(dataStr, dataMap)
+	json.Unmarshal([]byte(dataMapStr), dataMap)
 	linkMap := map[string]string{}
-	dataStr, _ = json.Marshal(mapStr["links"])
-	json.Unmarshal(dataStr, &linkMap)
+	dataStr := fmt.Sprintf("%v", mapStr["links"])
+	json.Unmarshal([]byte(dataStr), &linkMap)
 
 	return 0, linkMap["url"]
 
