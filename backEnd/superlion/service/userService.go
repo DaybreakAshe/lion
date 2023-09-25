@@ -22,11 +22,11 @@ type UserService struct {
 var userService *UserService
 
 /**在 Do 方法被调用后，该函数将被执行，而且只会执行一次，即使在多个协程同时调用的情况下也是如此*/
-var tagDaoOnce sync.Once
+var tagService sync.Once
 
 // NewUserDaoInstance 单例构建Dao
 func NewUserServiceInstance() *UserService {
-	tagDaoOnce.Do(
+	tagService.Do(
 		func() {
 			userService = &UserService{}
 		})
