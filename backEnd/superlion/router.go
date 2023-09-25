@@ -27,5 +27,6 @@ func InitRouter(r *gin.Engine) {
 	apiUserRouter.Use(config.LionTokenFilter())
 	apiUserRouter.POST("/newTag", controller.CreateNewTag)
 	apiUserRouter.GET("/tags", controller.GetUserTags)
+	apiUserRouter.GET("/delTag", controller.DeleteTag)
 
 }

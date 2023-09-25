@@ -14,6 +14,7 @@ import (
 	"superlion/model"
 	"superlion/repository"
 	"superlion/util"
+	"sync"
 	"time"
 )
 
@@ -22,10 +23,25 @@ var (
 	userNotFound = errors.New("user not found")
 )
 
+type LoginService struct {
+}
+
+var login *LoginService
+
+var loginService sync.Once
+
+func NewLoginServiceInstance() *LoginService {
+	loginService.Do(
+		func() {
+			login = &LoginService{}
+		})
+	return login
+}
+
 /**
 获取google授权后信息,
 */
-func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
+func (*LoginService) GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 	// 打印json
 	jsonstr, err := json.Marshal(params)
@@ -88,7 +104,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 						// 未带token登录，认为第一次登录？
 						ltoken := uuid.NewUUID()
 						goUserInfo.LionToken = ltoken
-						SaveTokenToCache(goUserInfo)
+						saveTokenToCache(goUserInfo)
 					}
 					rsp.Code = 200
 					rsp.Data = *goUserInfo
@@ -101,7 +117,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 
 				// 不存在则插入
 				if user == nil {
-					SaveUserInfoToDB(goUserInfo)
+					saveUserInfoToDB(goUserInfo)
 				}
 
 			}
@@ -120,7 +136,7 @@ func GetGoogleAuthBody(params LoginParmas) (*bean.CommonResponse, string) {
 /**
 保存登录信息到redis，设置3天过期 todo
 */
-func SaveTokenToCache(user *GoUserInfo) {
+func saveTokenToCache(user *GoUserInfo) {
 
 	redisP := config.GetRedisHelper()
 
@@ -143,7 +159,7 @@ func SaveTokenToCache(user *GoUserInfo) {
 	log.Printf("cache user to redis over,%s\n", name)
 }
 
-func SaveUserInfoToDB(user *GoUserInfo) (int, string) {
+func saveUserInfoToDB(user *GoUserInfo) (int, string) {
 
 	userEntity := &model.UserEntity{
 		GoId:            user.Id,
@@ -171,7 +187,7 @@ func SaveUserInfoToDB(user *GoUserInfo) (int, string) {
 /**
 登录接口 todo：未完成，未使用
 */
-func Login(req *bean.LoginReq) (string, string) {
+func (*LoginService) Login(req *bean.LoginReq) (string, string) {
 
 	fmt.Printf("login request params:name=%s,pwd=%s\n", req.Name, req.Passwd)
 
@@ -194,7 +210,7 @@ func Login(req *bean.LoginReq) (string, string) {
 /**
 根据谷歌id获取用户信息
 */
-func GetUserInfoByGoId(gid string) (*LionUserInfo, error) {
+func (*LoginService) GetUserInfoByGoId(gid string) (*LionUserInfo, error) {
 
 	if len(gid) == 0 {
 		return nil, errors.New("gid不可以为空")
@@ -222,7 +238,7 @@ func (u *GoUserInfo) MarshalBinary() ([]byte, error) {
 	return json.Marshal(u)
 }
 
-func UpdateUserInfo(user *LionUserInfo, req *bean.UpdateUserInfoBean) string {
+func (*LoginService) UpdateUserInfo(user *LionUserInfo, req *bean.UpdateUserInfoBean) string {
 
 	if user == nil {
 		return "请先登录呢"

@@ -12,6 +12,10 @@ import (
 	"superlion/service"
 )
 
+var (
+	loginService = service.NewLoginServiceInstance()
+)
+
 // GetAuthParams 获取谷歌用户信息
 func GetAuthParams(c *gin.Context) {
 
@@ -26,7 +30,7 @@ func GetAuthParams(c *gin.Context) {
 	}
 
 	// 解析：
-	data, err := service.GetGoogleAuthBody(req)
+	data, err := loginService.GetGoogleAuthBody(req)
 
 	jstr, eor := json.Marshal(*data)
 	fmt.Printf("login func :%s\n", string(jstr))
@@ -51,7 +55,7 @@ func GetUserInfoByGId(c *gin.Context) {
 
 	gid := c.Query("gid")
 
-	data, err := service.GetUserInfoByGoId(gid)
+	data, err := loginService.GetUserInfoByGoId(gid)
 	if err == nil {
 		c.JSON(http.StatusOK, bean.CommonResponse{
 			Code: 200,
@@ -82,6 +86,6 @@ func UpdateUserInfo(c *gin.Context) {
 		return
 	}
 	//fmt.Printf("edit infos,n:[%s],a:[%s]\n", req.)
-	data := service.UpdateUserInfo(luserBean, req)
+	data := loginService.UpdateUserInfo(luserBean, req)
 	writeResponse(c, data, nil)
 }

@@ -55,3 +55,18 @@ func (*TagDao) FindUserTagsByGoId(goId string) ([]model.LionTag, error) {
 		return tags, nil
 	}
 }
+
+// 删除标签
+func (*TagDao) DeleteTag(tagId, goId string) (int, string) {
+
+	if len(tagId) == 0 || len(goId) == 0 {
+		return 0, "删除参数错误"
+	}
+	err := db.Where("id = ? and creator_id = ?", tagId, goId).Delete(&model.LionTag{}).Error
+
+	if err != nil {
+		return 0, err.Error()
+	} else {
+		return 1, ""
+	}
+}

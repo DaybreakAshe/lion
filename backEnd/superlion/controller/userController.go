@@ -9,12 +9,16 @@ import (
 	"superlion/service"
 )
 
+var (
+	userService = service.NewUserServiceInstance()
+)
+
 // 获取用户所属标签
 func GetUserTags(c *gin.Context) {
 
 	user := GetLoginInfoByC(c)
 
-	data, err := service.GetUserTagList(user.GoId)
+	data, err := userService.GetUserTagList(user.GoId)
 
 	writeResponse(c, err, data)
 }
@@ -32,7 +36,25 @@ func CreateNewTag(c *gin.Context) {
 		})
 		return
 	}
-	data, err := service.CreateNewTag(req, user)
+	data, err := userService.CreateNewTag(req, user)
+
+	writeResponse(c, err, data)
+}
+
+// 用户删除标签
+func DeleteTag(c *gin.Context) {
+
+	user := GetLoginInfoByC(c)
+
+	req := map[string]string{}
+	eor := c.BindJSON(&req)
+	if eor != nil {
+		c.JSONP(400, gin.H{
+			"msg": eor.Error(),
+		})
+		return
+	}
+	data, err := userService.DeleteTag(req, user)
 
 	writeResponse(c, err, data)
 }
