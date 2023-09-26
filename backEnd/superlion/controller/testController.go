@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"superlion/bean"
-	"superlion/service"
 )
 
 /**
@@ -43,7 +42,7 @@ func Login(c *gin.Context) {
 	//	c.PostForm("passwd"),
 	//}
 	/* 处理请求 */
-	data, err := service.Login(&reqBody)
+	data, err := loginService.Login(&reqBody)
 
 	if len(err) != 0 {
 		c.JSONP(400, gin.H{

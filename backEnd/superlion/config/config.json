@@ -1,0 +1,11 @@
+{
+  "database": {
+    "name": "jnfdcome",
+    "password": "19aa5b459e809559",
+    "user": "jnfdroot",
+    "type": "mysql",
+    "host": "mysql.sqlpub.com",
+    "port": "3306",
+    "table_prefix": ""
+  }
+}

@@ -21,6 +21,8 @@ func main() {
 	// uploadFile()
 	server()
 	// util.Upload()
+
+	fmt.Println("app start ....")
 }
 
 func server() {
