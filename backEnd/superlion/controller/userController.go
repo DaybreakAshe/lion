@@ -58,3 +58,37 @@ func DeleteTag(c *gin.Context) {
 
 	writeResponse(c, err, data)
 }
+
+// 保存帖子草稿（缓存）
+func SavePostCache(c *gin.Context) {
+	user := GetLoginInfoByC(c)
+
+	req := bean.PostCacheReq{}
+	eor := c.BindJSON(&req)
+	if eor != nil {
+		c.JSONP(400, gin.H{
+			"msg": eor.Error(),
+		})
+		return
+	}
+	err := userService.SavePostCache(&req, user)
+
+	writeResponse(c, err, 0)
+}
+
+// 读取缓存详细
+func GetMyCaches(c *gin.Context) {
+	user := GetLoginInfoByC(c)
+
+	req := map[string]any{}
+	eor := c.BindJSON(&req)
+	if eor != nil {
+		c.JSONP(400, gin.H{
+			"msg": eor.Error(),
+		})
+		return
+	}
+	data, err := userService.GetUserCacheList(req, user)
+
+	writeResponse(c, err, data)
+}

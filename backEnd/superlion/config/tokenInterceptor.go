@@ -9,6 +9,7 @@ import (
 	"log"
 	"strings"
 	"superlion/constants"
+	"time"
 )
 
 const (
@@ -69,6 +70,11 @@ func checkToken(token string) string {
 	token = RedisPre + token
 
 	data, _ := redisP.Get(ctx, token).Result()
+
+	// token 有效，延长过期时间(刷新)
+	if len(data) > 2 {
+		redisP.Expire(ctx, token, 24*3*time.Hour)
+	}
 
 	return data
 }

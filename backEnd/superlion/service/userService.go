@@ -10,10 +10,12 @@ import (
 	"superlion/model"
 	"superlion/repository"
 	"sync"
+	"time"
 )
 
 var (
-	tagDao = repository.NewTagDaoInstance()
+	tagDao   = repository.NewTagDaoInstance()
+	cacheDao = repository.NewCacheDaoInstance()
 )
 
 type UserService struct {
@@ -96,4 +98,63 @@ func (*UserService) DeleteTag(params map[string]string, login *LionUserInfo) (in
 	} else {
 		return 0, ""
 	}
+}
+
+// 新增或修改帖子草稿
+func (*UserService) SavePostCache(cacheReq *bean.PostCacheReq, login *LionUserInfo) string {
+
+	if login == nil || len(login.GoId) == 0 {
+		return "登录信息无效"
+	}
+
+	cacheId := cacheReq.Id
+
+	cacheEntity := &model.LionCache{
+		Key:      cacheReq.Key,
+		Value:    cacheReq.Value,
+		UpdateAt: time.Now(),
+	}
+	// 为新增
+	if cacheId == 0 {
+		cacheEntity.CreateAt = time.Now()
+		err := cacheDao.SaveNewCache(cacheEntity)
+		if err != nil {
+			// 保存失败
+			log.Println("add lion_cache failed:", err.Error())
+			return err.Error()
+		}
+	} else { // 为更新
+		err := cacheDao.UpdateCache(cacheEntity)
+		if err != nil {
+			// 更新失败
+			log.Println("update lion_cache failed:", err.Error())
+			return err.Error()
+		}
+		cacheEntity.ID = cacheId
+	}
+	return ""
+}
+
+func (*UserService) GetUserCacheList(params map[string]any, login *LionUserInfo) (*bean.PostCacheRsp, string) {
+
+	cacheId := params["cacheId"].(int64)
+	if cacheId == 0 {
+		fmt.Println("req bean data :", params)
+		return nil, "文章不存在"
+	}
+
+	cache, err := cacheDao.FindCacheById(cacheId)
+	if cache == nil || err != nil {
+		log.Println("find sql no result:", err.Error())
+		return nil, "查询不到草稿"
+	}
+	cacheRsp := &bean.PostCacheRsp{
+		Id:       cacheId,
+		Key:      cache.Key,
+		Value:    cache.Value,
+		Type:     cache.Type,
+		CreateAt: cache.CreateAt,
+		UpdateAt: cache.UpdateAt,
+	}
+	return cacheRsp, ""
 }
