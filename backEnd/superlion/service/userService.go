@@ -137,7 +137,7 @@ func (*UserService) SavePostCache(cacheReq *bean.PostCacheReq, login *LionUserIn
 
 func (*UserService) GetUserCacheList(params map[string]any, login *LionUserInfo) (*bean.PostCacheRsp, string) {
 
-	cacheId := params["cacheId"].(int64)
+	cacheId := int64(params["cacheId"].(float64))
 	if cacheId == 0 {
 		fmt.Println("req bean data :", params)
 		return nil, "文章不存在"
