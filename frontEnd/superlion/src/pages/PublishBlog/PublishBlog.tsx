@@ -1,13 +1,15 @@
 import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Editor } from '@tinymce/tinymce-react';
 import ConfirmButton from "../../components/ConfirmButton/ConfirmButton2";
-import { uploadFile } from "../../services/createBlog/createBlog.service";
+import { uploadFile, createBlog } from "../../services/createBlog/createBlog.service";
+import SnackbarMessage from '../../components/Snackbar/Snackbar.tsx'
+import SetBlogInfo from "./SetBlogInfo";
+import { useNavigate } from "react-router-dom";
 const useStyles = makeStyles((_theme: Theme) => ({
     root: {
         width: "100%",
-        height: '500px',
     },
     buttonBox: {
         display: "flex",
@@ -17,69 +19,84 @@ const useStyles = makeStyles((_theme: Theme) => ({
 }))
 const PublicBlog = () => {
     const classes = useStyles()
+    const navigate = useNavigate();
+    const [alertMessage, setAlertMessage] = useState('');
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [severity, setSeverity] = useState<'error' | 'warning' | 'info' | 'success'>('info');
+    const [loading, setLoading] = useState<boolean>(false);
     const [content, setContent] = useState<any>(null);
+    const [blogContent, setBlogContent] = useState<any>(null);  //替换过base64的content
 
-    const onUpload = async (fileContent: any) => {
-        if (!fileContent) return;
-        const formData = new FormData();
-        formData.append('image', fileContent);
-        // const res = await fetch('https://148.100.77.194:8999/upload', {
-        //     method: 'POST',
-        //     body: formData
-        // });
-        const res= await uploadFile({
-            picture: fileContent,
-            busiType:'11'
-        })
-        console.log("res##",res);
-    }
-
-    const saveBlog = () => {
-        //1.获取字符串content里的图片
+    //返回base64的数组
+    const handleBase64 = useCallback((): string[] => {
         const imgReg = /<img.*?(?:>|\/>)/gi;
-        // 2.提取src
         const srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
         const imgSrc = content.match(imgReg)?.map((img: any) => {
             return img.match(srcReg)[1];
         });
-        //3.提取base64
+        return imgSrc;
+    }, [content])
+
+    //上传图片
+    const onUpload = async (fileContent: any) => {
+        if (!fileContent) return;
+        setLoading(true);
+        const res = await uploadFile({
+            picture: fileContent,
+            busiType: 'test'
+        })
+        return res?.data?.fileUrl;
+    }
+
+    const saveBlog = async () => {
+        if (!content) {
+            setAlertMessage('Please enter content');
+            setSeverity('error');
+            setIsOpen(!isOpen);
+            return;
+        }
         const base64Reg = /base64,([^\'\"]*)[\'\"]?/i;
-        const imgBase64 = imgSrc.map((img: any) => {
-            return img.match(base64Reg)[1];
+        const imgBase64 = handleBase64()?.map((img: any) => {
+            const bytes = atob(img.match(base64Reg)[1]);
+            const arr = new Uint8Array(bytes.length);
+            for (let i = 0; i < bytes.length; i++) {
+                arr[i] = bytes.charCodeAt(i);
+            }
+            const blob = new Blob([arr], { type: 'image/jpeg' });
+            const file = new File([blob], 'image.jpg');
+            return file;
         });
-        //4.对base64字符串进行解码,转换为二进制图片数据
-        const imgBinary = imgBase64?.map((img: any) => {
-            return atob(img);
+        if (!imgBase64) {
+            setLoading(false);
+            setBlogContent(content);
+            return;
+        }
+        const uploadPromise = imgBase64.map(file => {
+            return onUpload(file);
         });
-        console.log("二进制", imgBinary)
-        imgBinary?.map((img: any) => {
-            onUpload(img)
-        });
-        //5.利用二进制数据生成一个File对象以包装图片数据
-        // const imgBlob = imgBinary?.map((img: any) => {
-        //     const imgBuffer = new ArrayBuffer(img.length);
-        //     const imgUint8 = new Uint8Array(imgBuffer);
-        //     for (let i = 0; i < img.length; i++) {
-        //         imgUint8[i] = img.charCodeAt(i);
-        //     }
-        //     const imgBlob = new Blob([imgUint8], { type: 'image/png' });
-        //     return new File([imgBlob], 'img.png', { type: 'image/png' });
-        // });
-        
-        // console.log("imgBlob", imgBlob)
-        //6.上传图片
-        // imgBlob?.map((img: any) => {
-        //     onUpload(img)
-        // });
-        //转json，传给后端
-        // const contentJson = JSON.stringify(content)
-        // console.log("###",contentJson,typeof contentJson)
+        try {
+            const res = await Promise.all(uploadPromise);
+            let newContent = content;
+            res.map((url: string, index: number) => {
+                newContent = newContent.replace(handleBase64()[index], url);
+                if (index === res.length - 1) {
+                    console.log(newContent)
+                    setLoading(false);
+                    setBlogContent(newContent)
+                }
+            })
+        } catch (err) {
+            setAlertMessage('Upload failed');
+            setSeverity('error');
+            setIsOpen(true);
+        }
     }
     const cancel = () => {
-        console.log("cancel")
+        navigate(-1);
     }
     return (
         <>
+            <SnackbarMessage message={alertMessage} severity={severity} duration={5000} isOpen={isOpen} />
             <Box className={classes.root}>
                 <Editor
                     apiKey='mv9vikpudtaga4ks85kphmm3zmb5ydoa7vgatwchzq2ag705'
@@ -102,6 +119,7 @@ const PublicBlog = () => {
                     }}
                     value={content}
                 />
+                <SetBlogInfo />
                 <Box className={classes.buttonBox}>
                     <ConfirmButton
                         loading={false}
@@ -112,16 +130,18 @@ const PublicBlog = () => {
                             height: "42px",
                             background: "#fff",
                             marginRight: "20px",
+                            marginBottom: "20px",
                         }}
                     />
                     <ConfirmButton
-                        loading={false}
+                        loading={loading}
                         value={"Save"}
                         handleClick={saveBlog}
                         option={{
                             width: "100px",
                             height: "42px",
                             color: "#fff",
+                            marginBottom: "20px",
                         }}
                     />
                 </Box>
