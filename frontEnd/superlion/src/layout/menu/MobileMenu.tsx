@@ -2,7 +2,7 @@ import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from "react";
-import MenuItem from "./MenuItem";
+import MenuItem from "./MenuItem.tsx";
 import { Link } from "react-router-dom";
 import logo from "../../../src/assets/images/home/logo.png"
 const useStyles = makeStyles((theme: Theme) => ({
@@ -82,9 +82,12 @@ const MobileMenu = () => {
                     <span>Super Lion</span>
                 </Link>
                 <Box className={classes.menuListBox}>
-                    <MenuItem title="Blog" path="/blog" isMobile={true}/>
-                    <MenuItem title="About" path="/about" isMobile={true} />
-                    <MenuItem title="Contacts" path="/contact" isMobile={true} />
+                    <MenuItem title="Home" path="/blog" isMobile={true}/>
+                    <MenuItem title="Publish blog" path="/publishBlog" isMobile />
+                    <MenuItem title="My Blog" path="/myBlog" isMobile />
+                    <MenuItem title="My Draft" path="/myDraft" isMobile />
+                    <MenuItem title="About" path="/about" isMobile />
+                    <MenuItem title="Contacts" path="/contacts" isMobile/>
                 </Box>
             </Box>
         </Box>

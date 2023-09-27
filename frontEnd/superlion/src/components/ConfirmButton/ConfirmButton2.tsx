@@ -26,7 +26,7 @@ interface loadingButton {
     }
 }
 
-const LoadingBTN = (props: loadingButton) => {
+const ConfirmButton = (props: loadingButton) => {
     const { loading, value, handleClick, option, isShow = true } = props
     return (
         <>
@@ -62,10 +62,9 @@ const LoadingBTN = (props: loadingButton) => {
                         background: option?.backgroundHover || "#1a73e8"
                     },
                 }}>
-                {option?.icon && <img src={option.icon} alt="" style={{ margin: "5px", width: "17px", height: "17px" }} />}
                 {!loading && value}
             </LoadingButton>}
         </>
     );
 }
-export default LoadingBTN
+export default ConfirmButton
