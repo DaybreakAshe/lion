@@ -31,4 +31,7 @@ func InitRouter(r *gin.Engine) {
 	apiUserRouter.POST("/saveCache", controller.SavePostCache)
 	apiUserRouter.GET("/cache", controller.GetMyCaches)
 
+	apiUserRouter.POST("/newType", controller.AddNewArtType)
+	apiUserRouter.GET("/types", controller.GetUserArtTypeList)
+
 }

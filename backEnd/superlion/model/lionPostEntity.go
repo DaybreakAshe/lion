@@ -13,8 +13,9 @@ type LionPostEntity struct {
 	ContentType     string `gorm:"column:content_type;" form:"contentType" json:"contentType"`
 	MarkdownContent string `gorm:"column:markdown_content;" form:"markdownContent" json:"markdownContent"`
 	HtmlContent     string `gorm:"column:html_content;" form:"htmlContent" json:"htmlContent"`
-	Views           int64  `gorm:"column:views;" form:"views" json:"views"`
-	Approvals       int64  `gorm:"column:approvals;" form:"approvals" json:"approvals"`
+	Views           int64  `gorm:"column:views;" form:"views" json:"views"`                // 浏览量
+	Approvals       int64  `gorm:"column:approvals;" form:"approvals" json:"approvals"`    // 点赞量
+	Collection      int64  `gorm:"column:collection;" form:"collection" json:"collection"` // 收藏量
 	Comments        int64  `gorm:"column:comments;" form:"comments" json:"comments"`
 	TypeId          int64  `gorm:"column:type_id;" form:"typeId" json:"typeId"`
 	HeadImg         string `gorm:"column:head_img;" form:"headImg" json:"headImg"`
