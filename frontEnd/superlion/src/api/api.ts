@@ -5,7 +5,7 @@ export const axiosApi = (): AxiosInstance => {
     const instance = Axios.create({
         baseURL: process.env.REACT_APP_API_URL,
         headers: {
-            Authorization: `${getStoredValue('access_token')}` || ''
+            Authorization: `Bearer ${getStoredValue('access_token')}` || ''
         },
     });
     return instance;

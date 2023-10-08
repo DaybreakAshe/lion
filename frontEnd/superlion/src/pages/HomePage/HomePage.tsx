@@ -11,10 +11,7 @@ const HomePage = () => {
     return (
         <>
             <Box className={classes.root}>
-                <img src="https://z1.ax1x.com/2023/09/18/pP4VWo8.jpg" alt="" style={{
-                    width: "100%",
-                    height: "100%",
-                }}/>
+                #111
             </Box>
         </>
     )

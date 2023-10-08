@@ -10,16 +10,15 @@ import PublishBlog from "../pages/PublishBlog/PublishBlog";
 const useStyles = makeStyles((_theme: Theme) => ({
     root:{
         width: "100%",
-        backgroundColor: "#e5e7eb",
+        backgroundColor: "#F9F9F9",
     },
     content: {
         width: "100%",
         maxWidth: "1520px",
-        height: "calc(100vh - 65px)",
+        minHeight: "calc(100vh - 65px)",
         boxSizing: "border-box",
         margin: "0 auto",
         marginTop: "65px",
-        backgroundColor: "#fff",
         padding: "20px",
     },
 }))
