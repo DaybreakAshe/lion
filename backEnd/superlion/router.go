@@ -14,6 +14,8 @@ func InitRouter(r *gin.Engine) {
 	apiRouter.GET("/hello", controller.Hello)
 	apiRouter.POST("/login1", controller.Login)
 	apiRouter.POST("/login", controller.GetAuthParams)
+	// 无需认证
+	apiRouter.GET("/post/:id", controller.GetPostContent)
 
 	// 鉴权
 	apiAuthRouter := r.Group("/auth")

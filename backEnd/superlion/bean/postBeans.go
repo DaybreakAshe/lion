@@ -5,7 +5,7 @@ package bean
 
 // 保存文章 or 草稿
 type SavePostReq struct {
-	Category        string  `json:"category"`
+	Category        string  `json:"category"` // 文章分类
 	Title           string  `json:"title"`
 	ContentType     string  `json:"contentType"`
 	MarkdownContent string  `json:"markdownContent"`

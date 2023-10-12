@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
 	"time"
 )
@@ -18,7 +19,10 @@ func InitMysqlDB() error {
 
 	// dsn := "{}:piper_2021%wii@tcp({{MYSQL_HOST}}:3306)/douyin?charset=utf8mb4&parseTime=True&loc=Local"
 	dsn := "jnfdroot:19aa5b459e809559@tcp(mysql.sqlpub.com:3306)/jnfdcome?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		// 打印sql
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 
 	sqlDB, err := db.DB()
 	if err != nil {

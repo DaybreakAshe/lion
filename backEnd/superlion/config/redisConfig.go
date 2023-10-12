@@ -8,10 +8,14 @@ import (
 )
 
 const (
-	Redis_host     = "redis-14382.c81.us-east-1-2.ec2.cloud.redislabs.com"
-	Redis_port     = "14382"
-	Redis_pwd      = "ROOT123"
-	Redis_database = 0
+	//Redis_host     = "redis-14382.c81.us-east-1-2.ec2.cloud.redislabs.com"
+	//Redis_port     = "14382"
+	//Redis_pwd      = "ROOT123"
+	//Redis_database = 0
+	Redis_host     = "148.100.77.194"
+	Redis_port     = "39379"
+	Redis_pwd      = ""
+	Redis_database = 6
 )
 
 type RedisHelper struct {
