@@ -35,5 +35,6 @@ func InitRouter(r *gin.Engine) {
 
 	apiUserRouter.POST("/newType", controller.AddNewArtType)
 	apiUserRouter.GET("/types", controller.GetUserArtTypeList)
+	apiUserRouter.GET("/posts", controller.GetMyPostList)
 
 }

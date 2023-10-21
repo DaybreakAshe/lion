@@ -6,6 +6,7 @@ package repository
 import (
 	"log"
 	"superlion/model"
+	"superlion/util"
 	"sync"
 )
 
@@ -27,11 +28,39 @@ func NewPostEntityDaoInstance() *PostEntityDao {
 }
 
 // 保存文章
-func (*PostEntityDao) AddNewPost(post *model.LionPostEntity) string {
+func (*PostEntityDao) AddNewPost(post *model.LionPostEntity) (int64, string) {
 
 	// 插入:
 	err := db.Create(post).Error
-	return err.Error()
+
+	//id := db.
+	return post.Id, err.Error()
+}
+
+// 根据goid查询文章列表
+func (*PostEntityDao) GetMyPostList(goId string) ([]model.LionPostEntity, int64, string) {
+
+	if len(goId) == 0 {
+		return nil, 0, ""
+	}
+
+	// 分页参数
+	page := &model.PageDto{PageSize: 10, Page: 1}
+
+	var total int64 = 0
+	// 组装查询条件
+	var condi = &model.LionPostEntity{AuthorId: goId}
+
+	// 接收查询结果
+	var entitys []model.LionPostEntity
+
+	err := db.Scopes(util.Paginate(page)).Where(condi).Find(&entitys).Count(&total).Error
+
+	if err != nil {
+		return nil, 0, err.Error()
+	}
+
+	return entitys, total, ""
 }
 
 // 查询文章详细

@@ -12,6 +12,7 @@ const (
 	//Redis_port     = "14382"
 	//Redis_pwd      = "ROOT123"
 	//Redis_database = 0
+
 	Redis_host     = "148.100.77.194"
 	Redis_port     = "39379"
 	Redis_pwd      = ""

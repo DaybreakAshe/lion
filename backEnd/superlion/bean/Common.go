@@ -30,6 +30,8 @@ type PageParams struct {
 
 // 分页查询返回结果属性
 type PageResult struct {
-	Total int64   `json:"total"`
-	Data  [][]any `json:"data"`
+	Total int64  `json:"total"`
+	Msg   string `json:"msg"`
+	Code  int    `json:"code"`
+	Data  []any  `json:"data"`
 }

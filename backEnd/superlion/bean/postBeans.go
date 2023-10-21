@@ -18,6 +18,8 @@ type SavePostReq struct {
 	Tags            []int64 `json:"tags"`    // 文章标签id
 	IsDraft         bool    `json:"isDraft"` // 是否草稿
 }
+
+// 更新文章请求
 type UpdatePostParams struct {
 	Id         int64  `json:"id"`
 	Official   int32  `json:"official"` // 官方1-是，0-否
@@ -26,4 +28,20 @@ type UpdatePostParams struct {
 	Collection int64  `json:"collection"` // 收藏量
 	Sort       int32  `json:"sort"`
 	AuthorId   string `json:"authorId"`
+}
+
+// 文章列表查询返回bean
+type PostBeanRsp struct {
+	Id         int64  `json:"id"`
+	Title      string `json:"title"`
+	HeadImg    string `form:"headImg" json:"headImg"`
+	Official   int32  `json:"official"` // 官方1-是，0-否
+	AuditState string `json:"auditState"`
+	Views      int64  `json:"views"`
+	Approvals  int64  `json:"approvals"`  // 点赞量
+	Collection int64  `json:"collection"` // 收藏量
+	Sort       int32  `json:"sort"`
+	// AuthorId   string `json:"authorId"`
+	Preview string   `json:"preview"` // 预览内容
+	Tags    []string `json:"tags"`    //gorm:"foreignKey:tagId;"
 }
