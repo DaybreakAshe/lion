@@ -2,7 +2,7 @@ import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import { useState, useCallback } from "react";
 import { Editor } from '@tinymce/tinymce-react';
-import ConfirmButton from "../../components/ConfirmButton/ConfirmButton2";
+import ConfirmButton from "../../components/confirmButton/ConfirmButton.tsx";
 import { uploadFile, createBlog } from "../../services/createBlog/createBlog.service";
 import SnackbarMessage from '../../components/Snackbar/Snackbar.tsx'
 import SetBlogInfo from "./SetBlogInfo";
@@ -30,7 +30,7 @@ const PublicBlog = () => {
     //返回base64的数组
     const handleBase64 = useCallback((): string[] => {
         const imgReg = /<img.*?(?:>|\/>)/gi;
-        const srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+        const srcReg = /src=['"]?([^'"]*)['"]?/i;
         const imgSrc = content.match(imgReg)?.map((img: any) => {
             return img.match(srcReg)[1];
         });
@@ -55,7 +55,7 @@ const PublicBlog = () => {
             setIsOpen(!isOpen);
             return;
         }
-        const base64Reg = /base64,([^\'\"]*)[\'\"]?/i;
+        const base64Reg = /base64,([^'"]*)['"]?/i;
         const imgBase64 = handleBase64()?.map((img: any) => {
             const bytes = atob(img.match(base64Reg)[1]);
             const arr = new Uint8Array(bytes.length);
@@ -145,7 +145,6 @@ const PublicBlog = () => {
                         }}
                     />
                 </Box>
-
             </Box>
         </>
     )
