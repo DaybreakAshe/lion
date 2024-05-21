@@ -89,7 +89,7 @@ const Header = () => {
                     <MobileMenu />
                 }
                 <Box className={classes.searchBox}>
-                    {!isSmall && <Search />}
+                    {/* {!isSmall && <Search />} */}
                     {isLogin && !isMobile && <PublishButton />}
                     <UserInfo />
                 </Box>
