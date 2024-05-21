@@ -2,7 +2,7 @@ import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import { useState, useCallback } from "react";
 import { Editor } from '@tinymce/tinymce-react';
-import ConfirmButton from "../../components/confirmButton/ConfirmButton.tsx";
+import ConfirmButton from "src/components/ConfirmButton/ConfirmButton";
 import { uploadFile, createBlog } from "../../services/createBlog/createBlog.service";
 import SnackbarMessage from '../../components/Snackbar/Snackbar.tsx'
 import SetBlogInfo from "./SetBlogInfo";
@@ -94,10 +94,25 @@ const PublicBlog = () => {
     const cancel = () => {
         navigate(-1);
     }
+
+    const confirm = async()=>{
+        // "MD" | "HTML";
+        const param = {
+            title:"test-1",
+            category:"food",
+            contentType:"MD",
+            markdownContent:"QWE",
+            htmlContent:"123@@##"
+        }
+        const res = await createBlog(param);
+        console.log("res",res);
+    }
+
     return (
         <>
             <SnackbarMessage message={alertMessage} severity={severity} duration={5000} isOpen={isOpen} />
             <Box className={classes.root}>
+                <SetBlogInfo />
                 <Editor
                     apiKey='mv9vikpudtaga4ks85kphmm3zmb5ydoa7vgatwchzq2ag705'
                     init={{
@@ -119,11 +134,11 @@ const PublicBlog = () => {
                     }}
                     value={content}
                 />
-                <SetBlogInfo />
+                
                 <Box className={classes.buttonBox}>
                     <ConfirmButton
                         loading={false}
-                        value={"Cancel"}
+                        value={"取消"}
                         handleClick={cancel}
                         option={{
                             width: "100px",
@@ -135,8 +150,20 @@ const PublicBlog = () => {
                     />
                     <ConfirmButton
                         loading={loading}
-                        value={"Save"}
-                        handleClick={saveBlog}
+                        value={"保存到草稿"}
+                        handleClick={confirm}
+                        option={{
+                            width: "100px",
+                            height: "42px",
+                            color: "#fff",
+                            marginRight: "20px",
+                            marginBottom: "20px",
+                        }}
+                    />
+                    <ConfirmButton
+                        loading={loading}
+                        value={"发布"}
+                        handleClick={confirm}
                         option={{
                             width: "100px",
                             height: "42px",

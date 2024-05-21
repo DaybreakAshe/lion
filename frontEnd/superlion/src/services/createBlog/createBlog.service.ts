@@ -19,16 +19,16 @@ export const uploadFile = async (props: fileProps) => {
 }
 
 interface blogProps {
-    title: string,
-    content: string,
-    isPublic: boolean,
-    tag: string[],
-    category: string[],
+    title: string;
+    category:string;
+    contentType: string;
+    markdownContent:string;
+    htmlContent:string;
 }
 
 export const createBlog = async (props: blogProps) => {
     try {
-        const response = await axiosApi().post('/auth/createBlog', props)
+        const response = await axiosApi().post('/user/publish', props)
         return response.data
     } catch (error: any) {
         return error.response;
