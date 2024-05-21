@@ -14,7 +14,8 @@ func InitRouter(r *gin.Engine) {
 	apiRouter.GET("/hello", controller.Hello)
 	apiRouter.POST("/login1", controller.Login)
 	apiRouter.POST("/login", controller.GetAuthParams)
-	// 无需认证
+	// 无需认证//
+	// 获取文章（草稿？）
 	apiRouter.GET("/post/:id", controller.GetPostContent)
 
 	// 鉴权
@@ -33,8 +34,13 @@ func InitRouter(r *gin.Engine) {
 	apiUserRouter.POST("/saveCache", controller.SavePostCache)
 	apiUserRouter.GET("/cache", controller.GetMyCaches)
 
+	// 新增文章类型
 	apiUserRouter.POST("/newType", controller.AddNewArtType)
+	// 文章类型
 	apiUserRouter.GET("/types", controller.GetUserArtTypeList)
+	// 获取我的文章列表
 	apiUserRouter.GET("/posts", controller.GetMyPostList)
+	// 发布文章
+	apiUserRouter.POST("/publish", controller.PublishPost)
 
 }

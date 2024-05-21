@@ -13,10 +13,10 @@ const (
 	//Redis_pwd      = "ROOT123"
 	//Redis_database = 0
 
-	Redis_host     = "148.100.77.194"
-	Redis_port     = "39379"
+	Redis_host     = "yanjl.eu.org"
+	Redis_port     = "16379"
 	Redis_pwd      = ""
-	Redis_database = 6
+	Redis_database = 2
 )
 
 type RedisHelper struct {

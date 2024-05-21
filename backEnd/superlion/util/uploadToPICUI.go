@@ -28,7 +28,7 @@ func UploadToPIC(file *multipart.File, fileName string) (int, string) {
 	*/
 	params := &map[string]string{
 		"permission": "1",
-		"album_id":   "lion",
+		"album_id":   "4", // id为4的是lion
 	}
 
 	req, err := newfileUploadRequest(picUploadApi, *params, "file", file, fileName)

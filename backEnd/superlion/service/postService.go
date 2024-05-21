@@ -58,18 +58,18 @@ func (*PostService) FindPostById(id int64) (*model.PostEntity, string) {
 }
 
 // PublishPost 保存文章（发布）
-func (*PostService) PublishPost(postReq *bean.SavePostReq, login *LionUserInfo) (string, string) {
+func (*PostService) PublishPost(postReq *bean.SavePostReq, login *LionUserInfo) (int64, string) {
 
 	if login == nil {
-		return "", "您还未登录！"
+		return 0, "您还未登录！"
 	}
 	if len(postReq.Title) == 0 {
-		return "", "文章标题不可以为空"
+		return 0, "文章标题不可以为空"
 	}
 
 	// 文章最多10个标签
 	if len(postReq.Tags) > 9 {
-		return "", "文章标签最多10个！"
+		return 0, "文章标签最多10个！"
 	}
 	post := &model.LionPostEntity{
 		Title:           postReq.Title,
@@ -110,9 +110,9 @@ func (*PostService) PublishPost(postReq *bean.SavePostReq, login *LionUserInfo) 
 	// 保存文章-标签映射
 	err = tagPostDao.SaveTagPostMapList(TagPostMaps)
 	if len(err) != 0 {
-		return "", err
+		return 0, err
 	}
-	return "", ""
+	return postId, ""
 }
 
 // 查询我的文章列表
