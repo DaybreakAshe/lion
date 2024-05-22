@@ -2,7 +2,7 @@ import { Box, Theme } from "@mui/material";
 import { makeStyles } from '@mui/styles'
 import { useState, useCallback } from "react";
 import { Editor } from '@tinymce/tinymce-react';
-import ConfirmButton from "src/components/ConfirmButton/ConfirmButton";
+import ConfirmButton from "src/components/button/ConfirmButton";
 import { uploadFile, createBlog } from "../../services/createBlog/createBlog.service";
 import SnackbarMessage from '../../components/Snackbar/Snackbar.tsx'
 import SetBlogInfo from "./SetBlogInfo";
