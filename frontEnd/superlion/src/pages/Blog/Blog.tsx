@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import BlogCard from "./BlogCard";
 import { BlogProps } from "src/models/blog";
+import { enqueueSnackbar } from "notistack";
 
 const Blog = () => {
   const listData: BlogProps[] = [
