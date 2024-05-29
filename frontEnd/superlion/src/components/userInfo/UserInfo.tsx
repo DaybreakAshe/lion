@@ -276,7 +276,10 @@ const UserInfo = () => {
               </span>
             </Box>
             <Box>
-              <Box className={classes.infoBox} onClick={() => {}}>
+              <Box
+                className={classes.infoBox}
+                onClick={() => navigate("/profile")}
+              >
                 <PermIdentityIcon className={classes.infoBoxIco} />
                 <span className={classes.infoBoxText}>My Profile</span>
               </Box>
