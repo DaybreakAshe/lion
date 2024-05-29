@@ -34,6 +34,7 @@ import { getUserInfo } from "../../services/login/login.service";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { enqueueSnackbar } from "notistack";
+import ConfirmButton from "src/components/button/ConfirmButton"
 
 const clientId =
   "32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com";
@@ -171,6 +172,7 @@ const UserInfo = () => {
   const userName = useSelector((state: any) => state.username);
   const nickName = useSelector((state: any) => state.nickname);
   const [isShow, setIsShow] = useState<boolean>(false);
+  const [userLoading, setUserLoading] = useState<boolean>(false);
   const pathSegments = window.location.origin;
   const redirectUri =
     pathSegments === "http://localhost:3000"
@@ -195,6 +197,7 @@ const UserInfo = () => {
 
   const handleToken = useCallback(
     async (token: string) => {
+      setUserLoading(true);
       const param = {
         accessToken: token,
       };
@@ -211,6 +214,7 @@ const UserInfo = () => {
       } else {
         enqueueSnackbar("获取用户信息失败", { variant : "error"})
       }
+      setUserLoading(false);
     },
     [dispatch, navigate]
   );
@@ -293,9 +297,14 @@ const UserInfo = () => {
           </Box>
         </Box>
       ) : (
-        <Button onClick={() => setOpen(true)} className={classes.loginButton}>
-          登录
-        </Button>
+        <ConfirmButton
+            loading={userLoading}
+            value="登录"
+            handleClick={() => setOpen(true)}
+            option={{
+              color:"#fff"
+            }}
+        />
       )}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle
