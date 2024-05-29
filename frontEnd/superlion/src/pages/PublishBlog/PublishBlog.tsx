@@ -4,9 +4,9 @@ import { useState, useCallback } from "react";
 import { Editor } from '@tinymce/tinymce-react';
 import ConfirmButton from "src/components/button/ConfirmButton";
 import { uploadFile, createBlog } from "../../services/createBlog/createBlog.service";
-import SnackbarMessage from '../../components/Snackbar/Snackbar.tsx'
 import SetBlogInfo from "./SetBlogInfo";
 import { useNavigate } from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
 const useStyles = makeStyles((_theme: Theme) => ({
     root: {
         width: "100%",
@@ -20,9 +20,6 @@ const useStyles = makeStyles((_theme: Theme) => ({
 const PublicBlog = () => {
     const classes = useStyles()
     const navigate = useNavigate();
-    const [alertMessage, setAlertMessage] = useState('');
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [severity, setSeverity] = useState<'error' | 'warning' | 'info' | 'success'>('info');
     const [loading, setLoading] = useState<boolean>(false);
     const [content, setContent] = useState<any>(null);
     const [blogContent, setBlogContent] = useState<any>(null);  //替换过base64的content
@@ -50,9 +47,7 @@ const PublicBlog = () => {
 
     const saveBlog = async () => {
         if (!content) {
-            setAlertMessage('Please enter content');
-            setSeverity('error');
-            setIsOpen(!isOpen);
+            enqueueSnackbar("Please enter content",{variant:"warning"})
             return;
         }
         const base64Reg = /base64,([^'"]*)['"]?/i;
@@ -86,9 +81,7 @@ const PublicBlog = () => {
                 }
             })
         } catch (err) {
-            setAlertMessage('Upload failed');
-            setSeverity('error');
-            setIsOpen(true);
+            enqueueSnackbar("Upload failed", { variant: "error" })
         }
     }
     const cancel = () => {
@@ -110,7 +103,6 @@ const PublicBlog = () => {
 
     return (
         <>
-            <SnackbarMessage message={alertMessage} severity={severity} duration={5000} isOpen={isOpen} />
             <Box className={classes.root}>
                 <SetBlogInfo />
                 <Editor

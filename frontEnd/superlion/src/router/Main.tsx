@@ -7,16 +7,16 @@ import About from "../pages/About/About";
 import Contacts from "../pages/Contacts/Contacts";
 import PublishBlog from "../pages/PublishBlog/PublishBlog";
 import Profile from "src/pages/Profile/Profile"
-import homeBack from "../../src/assets/images/home/home.jpg";
+// import homeBack from "../../src/assets/images/home/home.jpg";
 
 const useStyles = makeStyles((_theme: Theme) => ({
     root:{
         width: "100%",
-        backgroundColor: "#F9F9F9",
-        backgroundImage: `url(${homeBack})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        // backgroundColor: "#F9F9F9",
+        // backgroundImage: `url(${homeBack})`,
+        // backgroundSize: "cover",
+        // backgroundPosition: "center",
+        // backgroundRepeat: "no-repeat",
     },
     content: {
         width: "100%",

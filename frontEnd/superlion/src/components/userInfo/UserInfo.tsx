@@ -7,6 +7,7 @@ import {
   DialogContent,
   Button,
   Avatar,
+  useMediaQuery,
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { makeStyles } from "@mui/styles";
@@ -29,8 +30,10 @@ import {
   setAvatar,
   setEmail,
 } from "../../store/actions/actions";
-import SnackbarMessage from "../Snackbar/Snackbar";
 import { getUserInfo } from "../../services/login/login.service";
+import { Link } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
+import { enqueueSnackbar } from "notistack";
 
 const clientId =
   "32041706814-n36purujenfckur3831hkjgipbc4plia.apps.googleusercontent.com";
@@ -39,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "25px 10px",
     boxSizing: "border-box",
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
+      width: "300px",
       height: "100%",
       padding: "20px 0",
     },
@@ -63,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down("md")]: {
       width: "100%",
       maxWidth: "450px",
+      padding: "0 8px",
     },
     "&:hover": {
       color: "black",
@@ -75,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loginWayText: {
     fontWeight: 400,
-    fontSize: "16px",
+    fontSize: "14px",
     color: "#555555",
   },
   loginButton: {
@@ -101,7 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: "pointer",
   },
   userInfoCard: {
-    width: "280px",
+    width: "180px",
     background: "#FFFFFF",
     border: "1px solid #EEEEEE",
     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
@@ -122,13 +126,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "column",
   },
   infoBox: {
-    width: "100%",
     height: "56px",
     display: "flex",
     alignItems: "center",
     boxSizing: "border-box",
     paddingLeft: "24px",
     color: "#000000",
+    textDecoration: "none",
     "&:hover": {
       background: "#F2F4F8",
     },
@@ -156,6 +160,8 @@ const UserInfo = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = useState(false);
   const isLogin = getStoredValue("access_token");
   const [loading, setLoading] = useState<boolean>(false);
@@ -166,11 +172,6 @@ const UserInfo = () => {
   const nickName = useSelector((state: any) => state.nickname);
   const [isShow, setIsShow] = useState<boolean>(false);
   const pathSegments = window.location.origin;
-  const [alertMessage, setAlertMessage] = useState("");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [severity, setSeverity] = useState<
-    "error" | "warning" | "info" | "success"
-  >("info");
   const redirectUri =
     pathSegments === "http://localhost:3000"
       ? "http://localhost:3000"
@@ -208,9 +209,7 @@ const UserInfo = () => {
         dispatch(setNickName(userInfo?.name || userInfo?.email || ""));
         navigate("/");
       } else {
-        setAlertMessage("获取用户信息失败");
-        setSeverity("error");
-        setIsOpen(true);
+        enqueueSnackbar("获取用户信息失败", { variant : "error"})
       }
     },
     [dispatch, navigate]
@@ -240,13 +239,7 @@ const UserInfo = () => {
     });
   }, []);
   return (
-    <>
-      <SnackbarMessage
-        message={alertMessage}
-        severity={severity}
-        duration={5000}
-        isOpen={isOpen}
-      />
+    <Box>
       {isLogin ? (
         <Box className={classes.content}>
           <Avatar
@@ -276,23 +269,32 @@ const UserInfo = () => {
               </span>
             </Box>
             <Box>
-              <Box
-                className={classes.infoBox}
-                onClick={() => navigate("/profile")}
-              >
+              <Box className={classes.infoBox} component={Link} to="/profile">
                 <PermIdentityIcon className={classes.infoBoxIco} />
-                <span className={classes.infoBoxText}>My Profile</span>
+                <span className={classes.infoBoxText}>个人信息</span>
               </Box>
+              {!isMobile && (
+                <Box className={classes.infoBox} component={Link} to="/myBlog">
+                  <PermIdentityIcon className={classes.infoBoxIco} />
+                  <span className={classes.infoBoxText}>我的博客</span>
+                </Box>
+              )}
+              {!isMobile && (
+                <Box className={classes.infoBox} component={Link} to="/myDraft">
+                  <PermIdentityIcon className={classes.infoBoxIco} />
+                  <span className={classes.infoBoxText}>我的草稿</span>
+                </Box>
+              )}
               <Box className={classes.infoBox} onClick={logout}>
                 <LogoutIcon className={classes.infoBoxIco} />
-                <span className={classes.infoBoxText}>Log Out</span>
+                <span className={classes.infoBoxText}>退出登录</span>
               </Box>
             </Box>
           </Box>
         </Box>
       ) : (
         <Button onClick={() => setOpen(true)} className={classes.loginButton}>
-          log in
+          登录
         </Button>
       )}
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -309,7 +311,7 @@ const UserInfo = () => {
               fontSize: "17px",
             }}
           >
-            log in
+            登录
           </span>
           <CloseIcon
             onClick={() => setOpen(false)}
@@ -321,21 +323,22 @@ const UserInfo = () => {
           <Box className={classes.dialogContent}>
             <Box className={classes.loginWay} onClick={() => youtubeLogin()}>
               <img src={google_ico} alt="google_ico" />
-              {loading ? (
-                <CircularProgress
-                  style={{ width: "20px", height: "20px", color: "#FF7161" }}
-                />
-              ) : (
-                <span className={classes.loginWayText}>
-                  Continue with Google
-                </span>
-              )}
+              <Box>
+                {loading ? (
+                  <CircularProgress
+                    style={{ width: "20px", height: "20px", color: "#FF7161" }}
+                  />
+                ) : (
+                  <span className={classes.loginWayText}>继续以谷歌登录</span>
+                )}
+              </Box>
+
               <div></div>
             </Box>
           </Box>
         </DialogContent>
       </Dialog>
-    </>
+    </Box>
   );
 };
 
