@@ -32,6 +32,9 @@ type LionPostEntity struct {
 	IsDelete        int32     `gorm:"column:is_delete;" form:"isDelete" json:"isDelete"`
 	CreateAt        time.Time `gorm:"column:create_at;" form:"createAt" json:"createAt"`
 	UpdateAt        time.Time `gorm:"column:update_at;" form:"updateAt" json:"updateAt"`
+
+	// Tags []Tag `gorm:"many2many:lion_tag_posts_mapping;" json:"tags"`                                             //gorm:"foreignKey:tagId;"
+	Tags []LionTag `gorm:"many2many:lion_tag_posts_mapping;foreignKey:Id;joinForeignKey:PostId;References:Id;joinReferences:TagId" json:"tags"` //gorm:"foreignKey:tagId;"
 }
 
 func (LionPostEntity) TableName() string {
@@ -75,6 +78,6 @@ type PostEntity struct {
 }
 
 type Tag struct {
-	TagId int64  `gorm:"column:tagId;" json:"tagId"`
-	Tag   string `gorm:"column:tags;" json:"tag"`
+	TagId int64  `gorm:"column:id;" json:"tagId"`
+	Tag   string `gorm:"column:name;" json:"tag"`
 }

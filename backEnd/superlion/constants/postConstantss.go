@@ -16,6 +16,11 @@ const (
 	// 文章内容类型
 	POST_CONTENT_MARKDOWN = "0"
 	POST_CONTENT_HTML     = "1"
+
+	// 审核状态
+	POST_AUDIT_STATE_UNKONW = "01"
+	POST_AUDIT_STATE_NO     = "00"
+	POST_AUDIT_STATE_YES    = "02"
 )
 
 // GetContentEnumValue 根据枚举常量获取值

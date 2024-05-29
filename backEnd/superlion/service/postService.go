@@ -100,7 +100,7 @@ func (*PostService) PublishPost(postReq *bean.SavePostReq, login *LionUserInfo) 
 
 	for i, tag := range tags {
 		tagMap := &model.LionTagPostsMapping{
-			PostsId:  postId,
+			PostId:   postId,
 			TagId:    tag,
 			CreateAt: time.Now(),
 			UpdateAt: time.Now(),
@@ -115,8 +115,8 @@ func (*PostService) PublishPost(postReq *bean.SavePostReq, login *LionUserInfo) 
 	return postId, ""
 }
 
-// 查询我的文章列表
-func (*PostService) GetMyPostList(login *LionUserInfo) (*bean.PageResult, string) {
+// 查询文章列表
+func (*PostService) GetMyPostList(login *LionUserInfo, params *bean.PostListParams) (*bean.PageResult, string) {
 
 	if login == nil || len(login.GoId) == 0 {
 		return nil, "login first"
@@ -124,7 +124,12 @@ func (*PostService) GetMyPostList(login *LionUserInfo) (*bean.PageResult, string
 
 	goId := login.GoId
 
-	entitys, total, err := postDao.GetMyPostList(goId)
+	condi := &model.LionPostEntity{
+		AuthorId:   goId,
+		AuditState: constants.POST_AUDIT_STATE_YES,
+	}
+
+	entitys, total, err := postDao.GetMyPostList(condi)
 
 	if len(err) != 0 {
 		return nil, err
@@ -150,6 +155,66 @@ func (*PostService) GetMyPostList(login *LionUserInfo) (*bean.PageResult, string
 			// Tags    :post. `json:"tags"`    //gorm:"foreignKey:tagId;"
 		}
 
+		datas[i] = postBean
+	}
+
+	pageRsp := &bean.PageResult{
+		Data:  datas,
+		Total: total,
+		Code:  0,
+	}
+
+	return pageRsp, ""
+}
+
+// 查询文章列表
+func (*PostService) GetPostList(params *bean.PostListParams) (*bean.PageResult, string) {
+
+	// 构建查询条件:
+	condi := &model.LionPostEntity{
+		AuthorId:   params.AuthorId,
+		AuditState: constants.POST_AUDIT_STATE_YES,
+		Title:      params.Title,
+		Category:   params.Category,
+		TypeId:     params.TypeId,
+		Official:   params.Official,
+		Marrow:     params.Marrow,
+		IsDelete:   0,
+	}
+
+	entitys, total, err := postDao.GetMyPostList(condi)
+
+	if len(err) != 0 {
+		return nil, err
+	}
+
+	// 组装结果集
+	datas := make([]any, len(entitys))
+	for i, post := range entitys {
+
+		// 实体类转bean
+		postBean := &bean.PostBeanRsp{
+			Id:         post.Id,
+			Title:      post.Title,
+			HeadImg:    post.HeadImg,
+			Official:   post.Official,
+			AuditState: post.AuditState,
+			Views:      post.Views,
+			Approvals:  post.Approvals,  // 点赞量
+			Collection: post.Collection, // 收藏量
+			Sort:       post.Sort,
+			// AuthorId   string `json:"authorId"`
+			Preview: "预览内容", // 预览内容
+			// Tags:       post.Tags `json:"tags"`    //gorm:"foreignKey:tagId;"
+		}
+
+		tags := make([]model.Tag, len(post.Tags))
+		for i, tag := range post.Tags {
+
+			tags[i].TagId = tag.Id
+			tags[i].Tag = tag.Name
+		}
+		postBean.Tags = tags
 		datas[i] = postBean
 	}
 

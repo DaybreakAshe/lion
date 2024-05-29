@@ -5,6 +5,8 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
+	"log"
 	"superlion/bean"
 	"superlion/service"
 	"superlion/util"
@@ -24,14 +26,36 @@ func GetPostContent(c *gin.Context) {
 	writeResponse(c, err, data)
 }
 
-// GetMyPostList 获取文章内容 /article/{id}
+// GetMyPostList 获取我的文章列表 /posts/
 func GetMyPostList(c *gin.Context) {
 
 	user := GetLoginInfoByC(c)
 
-	data, err := postService.GetMyPostList(user)
+	params := &bean.PostListParams{}
+	err := c.ShouldBindQuery(params)
+	if err != nil {
+		writeResponse(c, err.Error(), nil)
+	}
+	data, esr := postService.GetMyPostList(user, params)
 
-	writeResponse(c, err, data)
+	writeResponse(c, esr, data)
+}
+
+// GetMyPostList 获取文章列表 /posts/
+func GetPostList(c *gin.Context) {
+
+	// user := GetLoginInfoByC(c)
+
+	params := &bean.PostListParams{}
+	err := c.ShouldBindQuery(params)
+	if err != nil {
+		writeResponse(c, err.Error(), nil)
+	}
+	str, _ := json.Marshal(params)
+	log.Printf("get request params:%s", str)
+	data, esr := postService.GetPostList(params)
+
+	writeResponse(c, esr, data)
 }
 
 // 发布文章（草稿）

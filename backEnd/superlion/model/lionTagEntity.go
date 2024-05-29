@@ -5,7 +5,7 @@ package model
 
 // 标签表
 type LionTag struct {
-	Id          int64  `gorm:"column:id" json:"id"`                   //主键
+	Id          int64  `gorm:"primaryKey column:id" json:"id"`        //主键
 	AuditState  string `gorm:"column:audit_state" json:"audit_state"` //审核状态
 	GroupName   string `gorm:"column:group_name" json:"group_name"`   //所属分组
 	Name        string `gorm:"column:name" json:"name"`               //名称

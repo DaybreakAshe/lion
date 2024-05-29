@@ -17,6 +17,8 @@ func InitRouter(r *gin.Engine) {
 	// 无需认证//
 	// 获取文章（草稿？）
 	apiRouter.GET("/post/:id", controller.GetPostContent)
+	// 获取文章列表
+	apiRouter.GET("/posts", controller.GetPostList)
 
 	// 鉴权
 	apiAuthRouter := r.Group("/auth")

@@ -33,28 +33,56 @@ func (*PostEntityDao) AddNewPost(post *model.LionPostEntity) (int64, string) {
 	// 插入:
 	err := db.Create(post).Error
 
+	if err != nil {
+		log.Printf("插入失败：%s\n", err.Error())
+		return post.Id, err.Error()
+	}
 	//id := db.
-	return post.Id, err.Error()
+	return post.Id, ""
 }
 
 // 根据goid查询文章列表
-func (*PostEntityDao) GetMyPostList(goId string) ([]model.LionPostEntity, int64, string) {
+func (*PostEntityDao) GetMyPostList(condi *model.LionPostEntity) ([]model.LionPostEntity, int64, string) {
 
-	if len(goId) == 0 {
-		return nil, 0, ""
-	}
+	//if len(goId) == 0 {
+	//	return nil, 0, ""
+	//}
 
 	// 分页参数
 	page := &model.PageDto{PageSize: 10, Page: 1}
 
 	var total int64 = 0
-	// 组装查询条件
-	var condi = &model.LionPostEntity{AuthorId: goId}
+	//// 组装查询条件
+	//var condi = &model.LionPostEntity{
+	//	AuthorId: goId,
+	//	AuditState: constants.POST_AUDIT_STATE_YES,
+	//}
 
 	// 接收查询结果
 	var entitys []model.LionPostEntity
 
-	err := db.Scopes(util.Paginate(page)).Where(condi).Find(&entitys).Count(&total).Error
+	title := condi.Title
+	// status := condi.AuditState
+	condi.Title = ""
+	// condi.AuditState = ""
+	//db := db.Scopes(util.Paginate(page)).
+	//	Table("lion_post lp").
+	//	Select("lp.*, lt.id TagId,lt.name Tag").
+	//	Where("lp.audit_state = ?", status).
+	//	Joins("left join lion_tag_posts_mapping ltpm on ltpm.post_id = lp.id").
+	//	Joins("left join lion_tag lt on ltpm.tag_id = lt.id").
+	//	Where(condi)
+	db := db.Scopes(util.Paginate(page)).
+		Preload("Tags").
+		Where(condi)
+
+	log.Printf("like query :%s", title)
+	// 模糊搜索标题
+	if len(title) != 0 {
+		db = db.Where("lp.title like '%?%'", title)
+	}
+
+	err := db.Find(&entitys).Count(&total).Error
 
 	if err != nil {
 		return nil, 0, err.Error()
