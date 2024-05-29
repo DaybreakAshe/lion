@@ -40,7 +40,6 @@ const PublicBlog = () => {
   //上传图片
   const onUpload = async (fileContent: any) => {
     if (!fileContent) return;
-    setLoading(true);
     const res = await uploadFile({
       picture: fileContent,
       busiType: "test",
@@ -49,10 +48,14 @@ const PublicBlog = () => {
   };
 
   const saveBlog = async () => {
+
     if (!content) {
-      enqueueSnackbar("Please enter content", { variant: "warning" });
+        console.log("???");
+    //   enqueueSnackbar("Please enter content", { variant: "warning" });
       return;
     }
+      setLoading(true);
+
     const base64Reg = /base64,([^'"]*)['"]?/i;
     const imgBase64 = handleBase64()?.map((img: any) => {
       const bytes = atob(img.match(base64Reg)[1]);
@@ -65,8 +68,7 @@ const PublicBlog = () => {
       return file;
     });
     if (!imgBase64) {
-      setLoading(false);
-      setBlogContent(content);
+      update(content);
       return;
     }
     const uploadPromise = imgBase64.map((file) => {
@@ -78,13 +80,14 @@ const PublicBlog = () => {
       res.map((url: string, index: number) => {
         newContent = newContent.replace(handleBase64()[index], url);
         if (index === res.length - 1) {
-          setLoading(false);
           update(newContent);
         }
       });
     } catch (err) {
-      enqueueSnackbar("Upload failed", { variant: "error" });
+    //   enqueueSnackbar("Upload failed", { variant: "error" });
     }
+      setLoading(false);
+
   };
 
   const cancel = () => {
@@ -102,10 +105,12 @@ const PublicBlog = () => {
     };
     const res = await createBlog(param);
     if (res?.code === 200) {
-      enqueueSnackbar("发布成功", { variant: "success" });
+    //   enqueueSnackbar("发布成功", { variant: "success" });
+        navigate("/blog")
     } else {
-      enqueueSnackbar("发布失败", { variant: "error" });
+    //   enqueueSnackbar("发布失败", { variant: "error" });
     }
+      setLoading(false);
   };
 
   return (
