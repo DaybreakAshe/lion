@@ -304,6 +304,7 @@ const UserInfo = () => {
             value="登录"
             handleClick={() => setOpen(true)}
             option={{
+              width:"85px",
               color:"#fff"
             }}
         />
