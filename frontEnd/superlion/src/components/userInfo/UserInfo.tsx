@@ -211,6 +211,7 @@ const UserInfo = () => {
         dispatch(setUserName(userInfo?.name || ""));
         dispatch(setNickName(userInfo?.name || userInfo?.email || ""));
         navigate("/");
+        location.reload()
       } else {
         enqueueSnackbar("获取用户信息失败", { variant : "error"})
       }
@@ -227,6 +228,7 @@ const UserInfo = () => {
     dispatch(setUserName(""));
     dispatch(setNickName(""));
     navigate("/");
+    location.reload()
   };
   useEffect(() => {
     if (url && !isLogin) {
