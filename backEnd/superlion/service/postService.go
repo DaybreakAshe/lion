@@ -52,9 +52,40 @@ func (*PostService) FindPostById(id int64) (*model.PostEntity, string) {
 	if len(err) != 0 {
 		return nil, err
 	}
-	// 封装文章返回内容
 
-	return post, err
+	// 封装文章返回内容
+	rspPost := &model.PostEntity{
+		// 赋值属性
+		Title:           post.Title,
+		AuthorId:        post.AuthorId,
+		AuditState:      post.AuditState,
+		Category:        post.Category,
+		ContentType:     post.ContentType,
+		MarkdownContent: post.MarkdownContent,
+		HtmlContent:     post.HtmlContent,
+		Views:           post.Views,
+		Approvals:       post.Approvals,  // 点赞量
+		Collection:      post.Collection, // 收藏量
+		Comments:        post.Comments,
+		TypeId:          post.TypeId,
+		HeadImg:         post.HeadImg,
+		Official:        post.Official,
+		Top:             post.Top,
+		Marrow:          post.Marrow, // 精华
+		CreateAt:        post.CreateAt,
+		UpdateAt:        post.UpdateAt,
+	}
+	var tagName = make([]model.Tag, len(post.Tags))
+	for i, tag := range post.Tags {
+		tagRsp := model.Tag{
+			TagId: tag.Id,
+			Tag:   tag.Name,
+		}
+		tagName[i] = tagRsp
+		// tagName
+	}
+	rspPost.Tags = tagName
+	return rspPost, err
 }
 
 // PublishPost 保存文章（发布）
@@ -180,6 +211,7 @@ func (*PostService) GetPostList(params *bean.PostListParams) (*bean.PageResult, 
 		Official:   params.Official,
 		Marrow:     params.Marrow,
 		IsDelete:   0,
+		TagIds:     params.TagId,
 	}
 
 	entitys, total, err := postDao.GetMyPostList(condi)
@@ -203,8 +235,8 @@ func (*PostService) GetPostList(params *bean.PostListParams) (*bean.PageResult, 
 			Approvals:  post.Approvals,  // 点赞量
 			Collection: post.Collection, // 收藏量
 			Sort:       post.Sort,
-			// AuthorId   string `json:"authorId"`
-			Preview: "预览内容", // 预览内容
+			AuthorId:   post.AuthorId, //string `json:"authorId"`
+			Preview:    "预览内容",        // 预览内容
 			// Tags:       post.Tags `json:"tags"`    //gorm:"foreignKey:tagId;"
 		}
 
