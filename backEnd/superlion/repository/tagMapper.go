@@ -21,7 +21,7 @@ var tagDao *TagDao
 /**在 Do 方法被调用后，该函数将被执行，而且只会执行一次，即使在多个协程同时调用的情况下也是如此*/
 var tagDaoOnce sync.Once
 
-// NewUserDaoInstance 单例构建Dao
+// NewTagDaoInstance  单例构建Dao
 func NewTagDaoInstance() *TagDao {
 	tagDaoOnce.Do(
 		func() {
@@ -30,7 +30,7 @@ func NewTagDaoInstance() *TagDao {
 	return tagDao
 }
 
-// 插入新标签
+// AddNewTag 插入新标签
 func (*TagDao) AddNewTag(tag *model.LionTag) (int, error) {
 
 	err := db.Create(tag).Error
@@ -38,11 +38,12 @@ func (*TagDao) AddNewTag(tag *model.LionTag) (int, error) {
 		fmt.Println("insert new tag failed:", err.Error())
 		return 1, nil
 	} else {
+		fmt.Println("insert id :", tag.Id)
 		return 0, err
 	}
 }
 
-// 查询用户标签
+// FindUserTagsByGoId 查询用户标签
 func (*TagDao) FindUserTagsByGoId(goId string) ([]model.LionTag, error) {
 
 	var tags []model.LionTag
@@ -56,7 +57,7 @@ func (*TagDao) FindUserTagsByGoId(goId string) ([]model.LionTag, error) {
 	}
 }
 
-// 删除标签
+// DeleteTag 删除标签
 func (*TagDao) DeleteTag(tagId, goId string) (int, string) {
 
 	if len(tagId) == 0 || len(goId) == 0 {

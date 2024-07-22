@@ -21,3 +21,17 @@ type FileRspBean struct {
 	FileS3Url string `json:"fileS3Url"`
 	FileUrl   any    `json:"fileUrl"`
 }
+
+// 查询时分页参数
+type PageParams struct {
+	PageNum  int `json:"pageNum"`
+	PageSize int `json:"pageSize"`
+}
+
+// 分页查询返回结果属性
+type PageResult struct {
+	Total int64  `json:"total"`
+	Msg   string `json:"msg"`
+	Code  int    `json:"code"`
+	Data  []any  `json:"data"`
+}

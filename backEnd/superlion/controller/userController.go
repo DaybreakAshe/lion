@@ -41,6 +41,36 @@ func CreateNewTag(c *gin.Context) {
 	writeResponse(c, err, data)
 }
 
+// 用户新增文章类别
+func AddNewArtType(c *gin.Context) {
+
+	user := GetLoginInfoByC(c)
+
+	req := &bean.ArticleTypeReq{}
+	eor := c.BindJSON(req)
+	if eor != nil {
+		c.JSONP(400, gin.H{
+			"msg": eor.Error(),
+		})
+		return
+	}
+	err := userService.AddNewArtType(req, user)
+
+	writeResponse(c, err, nil)
+}
+
+// 用户文章类别列表
+func GetUserArtTypeList(c *gin.Context) {
+
+	user := GetLoginInfoByC(c)
+
+	req := &bean.FindArtTypeReq{}
+
+	data, err := userService.GetUserArtTypeList(req, user)
+
+	writeResponse(c, err, data)
+}
+
 // 用户删除标签
 func DeleteTag(c *gin.Context) {
 

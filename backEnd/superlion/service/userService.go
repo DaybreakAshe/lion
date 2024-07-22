@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"superlion/bean"
+	"superlion/constants"
 	"superlion/model"
 	"superlion/repository"
 	"sync"
@@ -14,8 +15,11 @@ import (
 )
 
 var (
-	tagDao   = repository.NewTagDaoInstance()
-	cacheDao = repository.NewCacheDaoInstance()
+	tagDao     = repository.NewTagDaoInstance()
+	cacheDao   = repository.NewCacheDaoInstance()
+	artTypeDao = repository.NewArticleTypeDaoInstance()
+
+	statusOK = constants.STATUS_OK
 )
 
 type UserService struct {
@@ -100,6 +104,57 @@ func (*UserService) DeleteTag(params map[string]string, login *LionUserInfo) (in
 	}
 }
 
+// 新增文章类别
+func (*UserService) AddNewArtType(typeReq *bean.ArticleTypeReq, login *LionUserInfo) string {
+	if login == nil || len(login.GoId) == 0 {
+		return "登录信息无效"
+	}
+
+	typeEntity := &model.LionArticleType{
+		Name: typeReq.Name, Description: typeReq.Desc,
+		AuditState: statusOK, CreatorId: login.GoId, CreateAt: time.Now(),
+	}
+
+	log.Print("build article type ok:", typeEntity)
+
+	err := artTypeDao.AddNewArticleType(typeEntity)
+
+	// 成功插入：
+	if len(err) == 0 {
+		return ""
+	}
+	return err
+}
+
+// 查询用户的文章类别
+func (*UserService) GetUserArtTypeList(params *bean.FindArtTypeReq, login *LionUserInfo) (*[]bean.UserArtTypeRsp, string) {
+
+	if login == nil || len(login.GoId) == 0 {
+		return nil, "登录信息无效"
+	}
+
+	// 组装查询参数
+	sqlParams := &model.LionArticleType{CreatorId: login.GoId, Name: params.Name}
+
+	rlt, err := artTypeDao.FindUserArtTypes(sqlParams)
+
+	dataRsp := make([]bean.UserArtTypeRsp, len(*rlt))
+	for i, entity := range *rlt {
+		bean := bean.UserArtTypeRsp{
+			Name:        entity.Name,
+			AuditState:  entity.AuditState,
+			ID:          entity.ID,
+			Description: entity.Description,
+			RefCount:    entity.RefCount,
+			CreateAt:    entity.CreateAt,
+			UpdateAt:    entity.UpdateAt,
+		}
+		dataRsp[i] = bean
+	}
+
+	return &dataRsp, err
+}
+
 // 新增或修改帖子草稿
 func (*UserService) SavePostCache(cacheReq *bean.PostCacheReq, login *LionUserInfo) string {
 
@@ -157,4 +212,17 @@ func (*UserService) GetUserCacheList(params map[string]any, login *LionUserInfo)
 		UpdateAt: cache.UpdateAt,
 	}
 	return cacheRsp, ""
+}
+
+// 查询草稿列表 todo
+func (*UserService) GetCacheList(params map[string]string, login *LionUserInfo) {
+
+	// page := &model.PageDto{Page: 1, PageSize: 10}
+
+	//data, total, err := cacheDao.CacheList(page, nil)
+	//
+	//if err != nil {
+	//	log.Println("find cache list failed:", err.Error())
+	//	return nil, "查询失败"
+	//}
 }

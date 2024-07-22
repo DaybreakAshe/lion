@@ -9,7 +9,7 @@ import "time"
 type LionTagPostsMapping struct {
 	ID       int64     `json:"id" gorm:"id"`              // 主键
 	TagId    int64     `json:"tagId" gorm:"tag_id"`       // 标签ID
-	PostsId  int64     `json:"postsId" gorm:"posts_id"`   // 帖子ID
+	PostId   int64     `json:"postId" gorm:"post_id"`     // 帖子ID
 	IsDelete int8      `json:"isDelete" gorm:"is_delete"` // 删除标识（0:未删除、1:已删除）
 	CreateAt time.Time `json:"createAt" gorm:"create_at"` // 记录创建时间
 	UpdateAt time.Time `json:"updateAt" gorm:"update_at"` // 记录修改时间
