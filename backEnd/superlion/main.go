@@ -37,7 +37,7 @@ func server() {
 	// 2、连接redis:
 	rdb := config.NewRedisHelper()
 	if _, err := rdb.Ping(ctx).Result(); err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("redis connect failed :{%s}...", err.Error())
 		return
 	}
 

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"sync"
@@ -8,15 +9,16 @@ import (
 )
 
 const (
-	//Redis_host     = "redis-14382.c81.us-east-1-2.ec2.cloud.redislabs.com"
-	//Redis_port     = "14382"
-	//Redis_pwd      = "ROOT123"
-	//Redis_database = 0
+	Redis_host     = "caching-1bbaeb26-dravenxue-82bd.h.aivencloud.com"
+	Redis_port     = "15278"
+	Redis_UserName = "default"
+	Redis_pwd      = "AVNS_cDEr2rLy4i2d2q1gX3l"
+	Redis_database = 0
 
-	Redis_host     = "yanjl.eu.org"
-	Redis_port     = "16379"
-	Redis_pwd      = ""
-	Redis_database = 2
+	//Redis_host     = "yanjl.eu.org"
+	//Redis_port     = "16379"
+	//Redis_pwd      = ""
+	//Redis_database = 2
 )
 
 type RedisHelper struct {
@@ -39,8 +41,12 @@ func NewRedisHelper() *redis.Client {
 		DialTimeout:  10 * time.Second,
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
-		PoolSize:     10,
+		PoolSize:     5,
 		PoolTimeout:  30 * time.Second,
+		TLSConfig: &tls.Config{
+			// 根据需要配置 TLS 选项
+			InsecureSkipVerify: true, // 如果你没有 CA 证书，可以临时跳过证书验证
+		},
 	})
 
 	redisOnce.Do(func() {
