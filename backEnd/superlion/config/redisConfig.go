@@ -41,7 +41,7 @@ func NewRedisHelper() *redis.Client {
 		DialTimeout:  10 * time.Second,
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
-		PoolSize:     10,
+		PoolSize:     5,
 		PoolTimeout:  30 * time.Second,
 		TLSConfig: &tls.Config{
 			// 根据需要配置 TLS 选项
