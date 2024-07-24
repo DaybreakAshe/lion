@@ -10,6 +10,7 @@ import (
 	"runtime/debug"
 	"superlion/config"
 	"superlion/repository"
+	"superlion/router"
 )
 
 var (
@@ -45,7 +46,7 @@ func server() {
 	server := gin.Default() // 创建服务
 	server.Use(cors())
 
-	InitRouter(server)
+	router.InitRouter(server)
 
 	server.Run(":8080")
 
