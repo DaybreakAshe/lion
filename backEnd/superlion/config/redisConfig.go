@@ -57,3 +57,43 @@ func NewRedisHelper() *redis.Client {
 	fmt.Println("redis init over,everything is OK")
 	return redisDB
 }
+
+/*
+https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/?envType=study-plan-v2&envId=top-interview-150
+0,0,0,1,1,1,2,3,3
+0 0 1 1 2 3 2 3 3
+*/
+func removeDuplicates(nums []int) int {
+
+	length := len(nums)
+
+	if length < 2 {
+		return length
+	}
+	// 重复计数
+	cnt := 1
+	// 当前指针-比较基准
+	head := 0
+	// 移动指针
+	tail := 1
+
+	for tail < length {
+		// 相等则计数+1
+		if nums[head] == nums[tail] {
+			cnt++
+			// 计数不到2，移动基准指针，直到达到2个重复值，head+1位需要被覆盖
+			if cnt <= 2 {
+				// 少于2个时，直接覆盖
+				nums[head+1] = nums[tail]
+				head++
+			}
+		} else { // 不相等覆盖基准指针，重置计数
+			nums[head+1] = nums[tail]
+			head++
+			cnt = 1
+		}
+		tail++
+	}
+
+	return head + 1
+}
