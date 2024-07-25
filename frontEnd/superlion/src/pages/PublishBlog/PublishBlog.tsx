@@ -51,8 +51,7 @@ const PublicBlog = () => {
 
     if (!content) {
         console.log("???");
-    //   enqueueSnackbar("Please enter content", { variant: "warning" });
-      return;
+        return;
     }
       setLoading(true);
 

@@ -16,4 +16,17 @@ export const getMyBlogList = async (props: Props) => {
     } catch (error: any) {
         return error.response;
     }
-}
+};
+
+export const getPublicBlogList = async () => {
+    try {
+        const response = await axiosApi().get('/lion/posts', {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        return response.data
+    } catch (error: any) {
+        return error.response;
+    }
+};
