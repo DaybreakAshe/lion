@@ -129,3 +129,27 @@ func errorToString(r interface{}) string {
 		return r.(string)
 	}
 }
+
+func productExceptSelf(nums []int) []int {
+	n := len(nums)
+	res := make([]int, n)
+
+	i := 1
+	product := 1
+	res[0] = 1
+	for i < n {
+		product *= nums[i-1]
+		res[i] = product
+		i++
+	}
+	fmt.Printf("final arr:%v", res)
+	// res[n-1] = 1
+	i = n - 1
+	product = 1
+	for i > -1 {
+		res[i] *= product
+		product *= nums[i]
+		i--
+	}
+	return res
+}

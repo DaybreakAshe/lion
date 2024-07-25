@@ -23,6 +23,8 @@ var (
 	postType constants.PostTypeCode
 )
 
+const dateFrommatter = "2006-01-02 15:04:05"
+
 type PostService struct {
 }
 
@@ -237,6 +239,8 @@ func (*PostService) GetPostList(params *bean.PostListParams) (*bean.PageResult, 
 			Sort:       post.Sort,
 			AuthorId:   post.AuthorId, //string `json:"authorId"`
 			Preview:    "预览内容",        // 预览内容
+			CreateAt:   post.CreateAt.Format(dateFrommatter),
+			UpdateAt:   post.UpdateAt.Format(dateFrommatter),
 			// Tags:       post.Tags `json:"tags"`    //gorm:"foreignKey:tagId;"
 		}
 

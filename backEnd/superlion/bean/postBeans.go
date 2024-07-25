@@ -3,7 +3,9 @@
 //@create: 2023-10-08 17:05
 package bean
 
-import "superlion/model"
+import (
+	"superlion/model"
+)
 
 // 保存文章 or 草稿
 type SavePostReq struct {
@@ -46,6 +48,8 @@ type PostBeanRsp struct {
 	AuthorId   string      `json:"authorId"`
 	Preview    string      `json:"preview"` // 预览内容
 	Tags       []model.Tag `json:"tags"`    //gorm:"foreignKey:tagId;"
+	CreateAt   string      `json:"createAt"`
+	UpdateAt   string      `json:"updateAt"`
 }
 
 // 文章列表查询参数
