@@ -14,7 +14,7 @@ const useStyles = makeStyles((_theme: Theme) => ({
   root: {
     width: "100%",
     backgroundColor: "#F9F9F9",
-    backgroundImage: `url(${homeBack})`,
+    // backgroundImage: `url(${homeBack})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",

@@ -3,21 +3,24 @@ import BlogCard from "./BlogCard";
 import { BlogProps } from "src/models/blog";
 import { enqueueSnackbar } from "notistack";
 import { getPublicBlogList } from "src/services/blog/blog.service.ts"
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 
 const Blog = () => {
-  const listData: BlogProps[] = [
-    
-  ];
-
+  const [dataList, setDataList] = useState<BlogProps[]>([]);
   const handleGetList = useCallback(async()=>{
     const res = await getPublicBlogList();
-    console.log("res",res);
+    if(res?.code === 200){
+      const list = res?.data?.data;
+      setDataList(list);
+    }else{
+      setDataList([]);
+    }
   },[]);
 
   useEffect(() => {
     handleGetList();
   }, [handleGetList]);
+
 
   return (
     <Box
@@ -35,7 +38,7 @@ const Blog = () => {
           width: "100%",
         }}
       >
-        {listData.map((item) => {
+        {dataList?.map((item) => {
           return <BlogCard key={item.id} blog={item} />;
         })}
       </Box>

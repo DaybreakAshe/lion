@@ -1,4 +1,6 @@
 import { axiosApi } from "../../api/api";
+import { ApiResponse } from "src/models/common.ts"
+import { GetListResponse } from "src/models/blog";
 
 interface Props {
     id:string;
@@ -18,7 +20,7 @@ export const getMyBlogList = async (props: Props) => {
     }
 };
 
-export const getPublicBlogList = async () => {
+export const getPublicBlogList = async (): Promise<ApiResponse<GetListResponse>> => {
     try {
         const response = await axiosApi().get('/lion/posts', {
             headers: {

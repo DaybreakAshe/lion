@@ -1,5 +1,5 @@
 import { Box, Divider } from "@mui/material";
-import { BlogProps } from "src/models/blog";
+import { BlogProps } from "src/models/blog.ts";
 import { FC } from "react";
 
 interface Props {
@@ -37,7 +37,7 @@ const BlogCard: FC<Props> = ({ blog }) => {
           padding:"15px 0"
         }}
       >
-        {blog.content}
+        {blog.title}
       </Box>
       <Divider />
       <Box
@@ -51,7 +51,7 @@ const BlogCard: FC<Props> = ({ blog }) => {
           color:"#666"
         }}
       >
-        {blog.time}
+        {blog.id}
       </Box>
     </Box>
   );
