@@ -31,12 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     inputStyle:{
         width:'300px',
         "& .MuiInputBase-root": {
-            height:"44px",
             borderRadius:"8px",
         },
-        [`${theme.breakpoints.down('sm')}`]: {
-            width:'100%',
-        }
     }
 }))
 
@@ -49,7 +45,7 @@ const SetBlogInfo = () => {
                 <Box className={classes.item}>
                     <span className={classes.title}>Title</span>
                     <TextField
-                        size='small'
+                        variant="outlined"
                         placeholder="Enter Title"
                         type='text'
                         value={TitleValue}

@@ -51,7 +51,7 @@ func LionTokenFilter() gin.HandlerFunc {
 		if len(userJson) <= 0 {
 			c.JSON(402, gin.H{
 				"code": "402",
-				"msg":  "登录过期了",
+				"msg":  "登录过期了🤔",
 			})
 			c.Abort()
 			return

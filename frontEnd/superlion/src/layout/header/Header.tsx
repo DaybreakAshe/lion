@@ -4,11 +4,11 @@ import logo from "../../../src/assets/images/home/logo.png"
 import UserInfo from '../../components/userInfo/UserInfo.tsx'
 import { Link } from "react-router-dom";
 import Menu from "../menu/Menu.tsx";
-import Search from "../../components/Search/Search.tsx";
 import PublishButton from "../../components/PublishButton/PublishButton.tsx";
 import { getStoredValue } from "../../utils/storage.ts";
 import { useTheme } from '@mui/material/styles';
 import MobileMenu from "../menu/MobileMenu.tsx";
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: "100%",
@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         "& span": {
             fontSize: "20px",
             fontWeight: "bold",
-            // fontFamily: "fantasy",
             [`${theme.breakpoints.down('sm')}`]: {
                 fontSize: "14px",
             }
@@ -65,7 +64,6 @@ const Header = () => {
     const classes = useStyles()
     const isLogin = getStoredValue('access_token')
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const isSmall = useMediaQuery(theme.breakpoints.down('lg'));
     return (
         <Box className={classes.root}>
             <Box className={classes.content}>
@@ -89,7 +87,6 @@ const Header = () => {
                     <MobileMenu />
                 }
                 <Box className={classes.searchBox}>
-                    {!isSmall && <Search />}
                     {isLogin && !isMobile && <PublishButton />}
                     <UserInfo />
                 </Box>

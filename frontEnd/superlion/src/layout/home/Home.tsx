@@ -6,6 +6,7 @@ import Main from "../../router/Main.tsx";
 const useStyles = makeStyles((_theme: Theme) => ({
     root: {
         position: "relative",
+        width:"100%"
     }
 }))
 
