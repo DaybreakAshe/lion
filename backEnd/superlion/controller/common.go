@@ -1,6 +1,6 @@
-//@program: superlion
-//@author: yanjl
-//@create: 2023-09-13 13:49
+// @program: superlion
+// @author: yanjl
+// @create: 2023-09-13 13:49
 package controller
 
 import (
@@ -20,7 +20,8 @@ import (
 	"time"
 )
 
-/**
+/*
+*
 获取解析token 的用户信息
 */
 func GetLoginInfoByC(c *gin.Context) *service.LionUserInfo {
@@ -58,7 +59,8 @@ func writeResponse(c *gin.Context, err string, data any) {
 	}
 }
 
-/**
+/*
+*
 图片上传公共函数
 */
 func PictureUpload(c *gin.Context) {
@@ -94,6 +96,23 @@ func PictureUpload(c *gin.Context) {
 		}
 		return
 	}
+
+}
+
+// 图片上传到r2
+func PictureUploadR2(c *gin.Context) {
+	busiType := c.PostForm("busiType")
+	//file, eor := c.FormFile("picture")
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		log.Print("Failed to get file:", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to upload file"})
+		return
+	}
+	defer file.Close()
+
+	// filename := filepath.Base(header.Filename)
+	service.UploadToR2Aws(file, header, busiType)
 
 }
 

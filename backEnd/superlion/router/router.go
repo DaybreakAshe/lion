@@ -45,4 +45,10 @@ func InitRouter(r *gin.Engine) {
 	// 发布文章
 	apiUserRouter.POST("/publish", controller.PublishPost)
 
+	// 通用接口
+	// 文件上传
+	commonRouter := r.Group("/common")
+	commonRouter.POST("/upload", controller.PictureUploadR2)
+	// 图片预览
+
 }

@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	Redis_host     = "caching-1bbaeb26-dravenxue-82bd.h.aivencloud.com"
-	Redis_port     = "15278"
+	Redis_host     = "lion-yanjl002.h.aivencloud.com"
+	Redis_port     = "24584"
 	Redis_UserName = "default"
-	Redis_pwd      = "AVNS_cDEr2rLy4i2d2q1gX3l"
+	Redis_pwd      = "AVNS_VkjQjjVxvSdhcN1gndY"
 	Redis_database = 0
 
 	//Redis_host     = "yanjl.eu.org"

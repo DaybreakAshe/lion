@@ -11,6 +11,7 @@ import (
 	"superlion/config"
 	"superlion/repository"
 	"superlion/router"
+	"superlion/util"
 )
 
 var (
@@ -41,6 +42,9 @@ func server() {
 		log.Fatalf("redis connect failed :{%s}...", err.Error())
 		return
 	}
+
+	// 3、初始雪花算法id生成器
+	util.InitSnowflake()
 
 	// 、启动服务端
 	server := gin.Default() // 创建服务
@@ -128,28 +132,4 @@ func errorToString(r interface{}) string {
 	default:
 		return r.(string)
 	}
-}
-
-func productExceptSelf(nums []int) []int {
-	n := len(nums)
-	res := make([]int, n)
-
-	i := 1
-	product := 1
-	res[0] = 1
-	for i < n {
-		product *= nums[i-1]
-		res[i] = product
-		i++
-	}
-	fmt.Printf("final arr:%v", res)
-	// res[n-1] = 1
-	i = n - 1
-	product = 1
-	for i > -1 {
-		res[i] *= product
-		product *= nums[i]
-		i--
-	}
-	return res
 }
